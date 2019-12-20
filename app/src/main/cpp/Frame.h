@@ -7,13 +7,16 @@
 //https://arm-software.github.io/opengl-es-sdk-for-android/introduction_to_shaders.html
 //
 
-
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #ifndef ANDROMEDA_FRAME_H
 #define ANDROMEDA_FRAME_H
 
 #include "Asset.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <gl3stub.h>
+
 #define VERTEX_POS_INDX 0
 #define VERTEX_NORMAL_INDX 1
 #define VERTEX_COLOR_INDEX 1
@@ -38,8 +41,93 @@
 #define VERTEX_TEXCOORD2_INDEX 5
 
 ShadersManager *m;
+ShadersManager *m2;
+
 GLint text[5];
 std::list<GLAttrib> lAttrib;
+
+struct Character {
+    GLuint     TextureID;  // ID handle of the glyph texture
+    glm::ivec2 Size;       // Size of glyph
+    glm::ivec2 Bearing;    // Offset from baseline to left/top of glyph
+    FT_Pos     Advance;    // Offset to advance to next glyph
+};
+
+std::map<GLchar, Character> Characters;
+
+void RenderText(ShadersManager *s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
+{
+    GLuint programObject = s->programObject;
+
+    // Activate corresponding render state
+
+
+
+    //glBindVertexArray(VAO);
+
+    // Iterate through all characters
+    std::string::const_iterator c;
+
+    glActiveTexture(GL_TEXTURE0);
+
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+    //glUseProgram(programObject);
+
+    GLint vv = glGetUniformLocation(s->programObject, "color");
+
+
+    _LOGE("COLOR_X *** %d = %d > %f, %f, %f", programObject, vv, color.x, color.y, color.z);
+    glUniform3f(vv, color.x, color.y, color.z);
+
+
+    for (c = text.begin(); c != text.end(); c++)
+    {
+
+        Character ch = Characters[*c];
+
+        GLfloat xpos = x + ch.Bearing.x * scale;
+        GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        GLfloat w = ch.Size.x * scale;
+        GLfloat h = ch.Size.y * scale;
+
+        GLfloat vertices2[6*4] = {
+                xpos,     ypos + h,   0.0, 0.0 ,
+                xpos,     ypos,       0.0, 1.0 ,
+                xpos + w, ypos,       1.0, 1.0 ,
+
+                xpos,     ypos + h,   0.0, 0.0 ,
+                xpos + w, ypos,       1.0, 1.0 ,
+                xpos + w, ypos + h,   1.0, 0.0
+        };
+        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*6*4, vertices2, GL_DYNAMIC_DRAW);
+
+        // Render glyph texture over quad
+
+        // Update content of VBO memory
+        //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        //glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // Render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+        x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+        //x += (ch.Advance / 64);
+    }
+
+    glDisableVertexAttribArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+
 void Init0 (android_app* app){
 
     Asset::setAssetManager(app->activity->assetManager);
@@ -151,11 +239,96 @@ void Frame1(android_app* app, EGLDisplay display, EGLSurface surface){
     glDeleteBuffers(2, vboIds);
 }
 
-void Init (android_app* app){
-
+void Init2 (android_app* app){
     Asset::setAssetManager(app->activity->assetManager);
     m =  new ShadersManager();
     m->mAssetManager = app->activity->assetManager;
+
+    m2 =  new ShadersManager();
+    m2->mAssetManager = app->activity->assetManager;
+
+    FT_Library ft;
+    FT_Face face;
+    if (FT_Init_FreeType(&ft)){
+        _LOGE("ERROR::FREETYPE: Could not init FreeType Library");
+    }
+
+
+
+    AAsset* fontFile = AAssetManager_open(app->activity->assetManager, "fonts/baily.ttf", AASSET_MODE_BUFFER);
+    off_t fontDataSize = AAsset_getLength(fontFile);
+    FT_Byte* fontData = new FT_Byte[fontDataSize];
+    AAsset_read(fontFile, fontData, (size_t) fontDataSize);
+    AAsset_close(fontFile);
+    if (FT_New_Memory_Face(ft, (const FT_Byte*)fontData, (FT_Long)fontDataSize, 0, &face)) {
+        _LOGE("ERROR::FREETYPE:Load memory failed");
+    }
+
+    FT_Set_Pixel_Sizes(face, 0, 48);
+    if (FT_Load_Char(face, 'X', FT_LOAD_RENDER)){
+        _LOGE("ERROR::FREETYPE:Failed to load Glyph");
+    }
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+
+    for (GLubyte c = 0; c < 128; c++)
+    {
+        // Load character glyph
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+        {
+            _LOGE("ERROR::FREETYPE:Failed to load Glyph");
+            continue;
+        }
+        // Generate texture
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RGB
+
+                ,
+                face->glyph->bitmap.width,
+                face->glyph->bitmap.rows,
+                0,
+                GL_RGB
+
+                ,
+                GL_UNSIGNED_BYTE,
+                face->glyph->bitmap.buffer
+        );
+        // Set texture options
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // Now store character for later use
+        Character character = {
+                texture,
+                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                face->glyph->advance.x
+        };
+
+        //_LOGE("ERROR::FREETYPE: %s", c);
+        Characters.insert(std::pair<GLchar, Character>(c, character));
+    }
+
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
+
+    /*
+    FT_Face face;
+
+    if (FT_New_Face(ft, "/assets/fonts/baily.ttf", 0, &face)){
+        _LOGE("ERROR::FREETYPE: Failed to load font");
+    }
+     */
+
+
+
+
 
 
 
@@ -170,62 +343,13 @@ void Init (android_app* app){
     //lProgram[0] = m->programObject;
 
     text[0] = Texture(app->activity->assetManager, "png/mario.png");
-    //text[1] = Texture(app->activity->assetManager, "png/instagram.png");
-    //text[2] = Texture(app->activity->assetManager, "png/mickey.png");
+    text[1] = Texture(app->activity->assetManager, "png/instagram.png");
+    text[2] = Texture(app->activity->assetManager, "png/mickey.png");
 
 
-    glBindTexture(GL_TEXTURE_2D, text[0]);
+
 }
-void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
-    glClearColor(1.0f,0.0f,0.5f, 1);
-    //glClearColor(1.0f,1.0f,0.5f, 1);
-   glEnable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glDepthMask(GL_FALSE);
-   glDepthFunc(GL_ALWAYS);
-    //std::list<GLAttrib> lAttrib;
-    //std::unordered_map<GLushort , std::string> mAttrib;
-    //text_png PNG;
-    //return;
-    _LOGE(" FRAME -a-  draw_frame");
-    // No display.
-    if (display == NULL) {
-        _LOGE("************************ CLOSE");
-        return;
-    }
-
-
-    GLuint programObject = m->programObject;
-
-    //glBindTexture(GL_TEXTURE_2D, text[1]);
-
-    //glViewport(0, 0, 400,400);
-
-    GLuint MatrixID = glGetUniformLocation(programObject, "MVP");
-    glUseProgram(programObject);
-
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
-    // Camera matrix
-    glm::mat4 View       = glm::lookAt(
-            glm::vec3(0,0,2), // Camera is at (4,3,-3), in World Space
-            glm::vec3(0,0,0), // and looks at the origin
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-    // Model matrix : an identity matrix (model will be at the origin)
-    glm::mat4 Model      = glm::mat4(1.0f);
-    //LOGI("aspect1 %d", aspect);
-
-    float aspect = 0.5;
-    float radians = 180;
-    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*aspect,1.0f));
-    Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
-    float left = -0.3f, up = 0.0f;
-    Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
-    // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP        = Projection * View * Model ; // Remember, matrix multiplication is the other way around
-
-    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
+void Frame2(android_app* app, EGLDisplay display, EGLSurface surface){
 
 
     GLfloat vVertices1[] = {
@@ -270,19 +394,262 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 
 
 
+    glClearColor(1.0f,0.0f,0.1f, 1);
+    //glClearColor(1.0f,1.0f,0.5f, 1);
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    //std::list<GLAttrib> lAttrib;
+    //std::unordered_map<GLushort , std::string> mAttrib;
+    //text_png PNG;
+    //return;
+    _LOGE(" FRAME -a-  draw_frame");
+    // No display.
+    if (display == NULL) {
+        _LOGE("************************ CLOSE");
+        return;
+    }
+
+
+    GLuint programObject = m->programObject;
+
+    //glBindTexture(GL_TEXTURE_2D, text[1]);
+
+    //glViewport(0, 0, 400,400);
+
+    GLuint MatrixID = glGetUniformLocation(programObject, "MVP");
+    glUseProgram(programObject);
+
+    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+    // Camera matrix
+    glm::mat4 View       = glm::lookAt(
+            glm::vec3(0,0,2), // Camera is at (4,3,-3), in World Space
+            glm::vec3(0,0,0), // and looks at the origin
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+    // Model matrix : an identity matrix (model will be at the origin)
+    glm::mat4 Model      = glm::mat4(1.0f);
+    //LOGI("aspect1 %d", aspect);
+
+    float aspect = 0.5;
+    float radians = 180;
+    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*aspect,1.0f));
+    Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
+    float left = -0.3f, up = 0.0f;
+    Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
+    // Our ModelViewProjection : multiplication of our 3 matrices
+    glm::mat4 MVP        = Projection * View * Model ; // Remember, matrix multiplication is the other way around
+
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    glBindTexture(GL_TEXTURE_2D, text[0]);
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
 
 
 
-    //return;
+    // Model matrix : an identity matrix (model will be at the origin)
+    Model      = glm::mat4(1.0f);
+    //LOGI("aspect1 %d", aspect);
 
-    //LOGE("ancho = %d, alto = %d",width, height);
-    //glClearColor(100, 0, 0, 1);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //init();
+    aspect = 0.5;
+    radians = 170;
+    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*aspect,1.0f));
+    Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
+    left = 0.1f, up = 0.0f;
+    Model = glm::translate(Model, glm::vec3(0+left,0+up,-1.2));
+    // Our ModelViewProjection : multiplication of our 3 matrices
+    MVP        = Projection * View * Model ; // Remember, matrix multiplication is the other way around
+
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    glBindTexture(GL_TEXTURE_2D, text[1]);
+    glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
+
+
+
     eglSwapBuffers(display, surface);
-
     glDeleteBuffers(2, vboIds);
 }
 
+
+void Init (android_app* app){
+    Asset::setAssetManager(app->activity->assetManager);
+    m =  new ShadersManager();
+    m->mAssetManager = app->activity->assetManager;
+
+    m2 =  new ShadersManager();
+    m2->mAssetManager = app->activity->assetManager;
+
+    FT_Library ft;
+    FT_Face face;
+    if (FT_Init_FreeType(&ft)){
+        _LOGE("ERROR::FREETYPE: Could not init FreeType Library");
+    }
+
+
+
+    AAsset* fontFile = AAssetManager_open(app->activity->assetManager, "fonts/arial.ttf", AASSET_MODE_BUFFER);
+    off_t fontDataSize = AAsset_getLength(fontFile);
+    FT_Byte* fontData = new FT_Byte[fontDataSize];
+    AAsset_read(fontFile, fontData, (size_t) fontDataSize);
+    AAsset_close(fontFile);
+    if (FT_New_Memory_Face(ft, (const FT_Byte*)fontData, (FT_Long)fontDataSize, 0, &face)) {
+        _LOGE("ERROR::FREETYPE:Load memory failed");
+    }
+
+    //FT_Set_Char_Size(face, 0 )
+    FT_Set_Pixel_Sizes(face, 0, 48*1);
+    //FT_Set_Char_Size(face, 0, 16*64*2, 600, 600 );
+    if (FT_Load_Char(face, 'X', FT_LOAD_RENDER)){
+        _LOGE("ERROR::FREETYPE:Failed to load Glyph");
+    }
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+
+    for (GLubyte c = 0; c < 128; c++)
+    {
+        // Load character glyph
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+        {
+            _LOGE("ERROR::FREETYPE:Failed to load Glyph");
+            continue;
+        }
+        // Generate texture
+
+        //FT_Load_Glyph(face, FT_Get_Char_Index(face,c), FT_LOAD_TARGET_LIGHT);
+
+        //FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
+
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_R8,
+                face->glyph->bitmap.width,
+                face->glyph->bitmap.rows,
+                0,
+                GL_RED,
+                GL_UNSIGNED_BYTE,
+                face->glyph->bitmap.buffer
+        );
+        // Set texture options
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+
+        // Now store character for later use
+        Character character = {
+                texture,
+                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                face->glyph->advance.x
+        };
+
+        //_LOGE("ERROR::FREETYPE: %s", c);
+        Characters.insert(std::pair<GLchar, Character>(c, character));
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
+
+    /*
+    FT_Face face;
+
+    if (FT_New_Face(ft, "/assets/fonts/baily.ttf", 0, &face)){
+        _LOGE("ERROR::FREETYPE: Failed to load font");
+    }
+     */
+
+    m->setVS("shaders/font_vs.glsl");
+    m->setFS("shaders/font_fs.glsl");
+
+
+    lAttrib.push_back({0, 4, "vertex"});
+
+    m->Program3(lAttrib);
+    //lProgram[0] = m->programObject;
+
+    //text[0] = Texture(app->activity->assetManager, "png/mario.png");
+    //text[1] = Texture(app->activity->assetManager, "png/instagram.png");
+    //text[2] = Texture(app->activity->assetManager, "png/mickey.png");
+
+
+
+}
+void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
+
+
+
+
+
+    glClearColor(1.0f,0.2f,0.1f, 1);
+    //glClearColor(1.0f,1.0f,0.5f, 1);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    //std::list<GLAttrib> lAttrib;
+    //std::unordered_map<GLushort , std::string> mAttrib;
+    //text_png PNG;
+    //return;
+    _LOGE(" FRAME -a-  draw_frame");
+    // No display.
+    if (display == NULL) {
+        _LOGE("************************ CLOSE");
+        return;
+    }
+
+
+    GLuint programObject = m->programObject;
+
+    //glBindTexture(GL_TEXTURE_2D, text[1]);
+
+    //glViewport(0, 0, 400,400);
+
+    GLuint MatrixID = glGetUniformLocation(programObject, "projection");
+    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+
+    glUseProgram(programObject);
+
+
+
+    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+    //Projection = glm::ortho(0.0f, 500.0f, 0.0f, 400.0f);
+
+    // Camera matrix
+    glm::mat4 View       = glm::lookAt(
+            glm::vec3(0,0,3), // Camera is at (4,3,-3), in World Space
+            glm::vec3(0,0,0), // and looks at the origin
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+    // Model matrix : an identity matrix (model will be at the origin)
+    glm::mat4 Model      = glm::mat4(1.0f);
+    //LOGI("aspect1 %d", aspect);
+
+    float aspect = 0.5;
+    float radians = 0;
+    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*aspect,1.0f));
+    //Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
+    float left = -0.0f, up = 0.0;
+    Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
+    // Our ModelViewProjection : multiplication of our 3 matrices
+    glm::mat4 MVP        = Projection * View * Model ; // Remember, matrix multiplication is the other way around
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+    /*
+    GLint vv = glGetUniformLocation(programObject, "textColor");
+    _LOGE("COLOR_X __ %d = %d > %f, %f, %f", programObject, vv, 0.2f, 0.0f, 0.5f);
+    glUniform3f(vv, 0.2f, 0.0f, 0.5f);
+    */
+    RenderText(m2, "Yanny", -0.3f, -0.5f, 0.005, glm::vec3(0.1, 0.8f, 0.2f));
+
+    eglSwapBuffers(display, surface);
+
+}
 #endif //ANDROMEDA_FRAME_H

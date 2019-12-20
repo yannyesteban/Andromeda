@@ -179,10 +179,10 @@ int ShadersManager::Program3(std::list<GLAttrib> pAttrib){
         glDeleteProgram(programObject);
         return false;
     }
-    //GLuint MatrixID = glGetUniformLocation(programObject, "MVP");
-    //LOGE("yanny MVP => %d", MatrixID );
+    GLuint MatrixID = glGetUniformLocation(programObject, "projection");
+    _LOGE("yanny MVP x => %d", MatrixID );
 
-    _LOGE("yanny Bien");
+    _LOGE("yanny Bien x");
     return true;
 }
 
