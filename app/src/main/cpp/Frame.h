@@ -12,10 +12,13 @@
 
 #ifndef ANDROMEDA_FRAME_H
 #define ANDROMEDA_FRAME_H
-
+#include <iostream>
+#include <string>
 #include "Asset.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <gl3stub.h>
+#include <freetype/ftglyph.h>
+#include <freetype/ftstroke.h>
 
 #define VERTEX_POS_INDX 0
 #define VERTEX_NORMAL_INDX 1
@@ -80,10 +83,10 @@ void RenderText(ShadersManager *s, std::string text, GLfloat x, GLfloat y, GLflo
 
     //glUseProgram(programObject);
 
-    GLint vv = glGetUniformLocation(s->programObject, "color");
+    GLint vv = glGetUniformLocation(s->programObject, "textColor");
 
 
-    _LOGE("COLOR_X *** %d = %d > %f, %f, %f", programObject, vv, color.x, color.y, color.z);
+    //_LOGE("COLOR_X *** %d = %d > %f, %f, %f", programObject, vv, color.x, color.y, color.z);
     glUniform3f(vv, color.x, color.y, color.z);
 
 
@@ -504,6 +507,12 @@ void Init (android_app* app){
     }
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+/*
+    // initialize stroker, so you can create outline font
+    FT_Stroker stroker;
+    FT_Stroker_New(ft, &stroker);
+    FT_Stroker_Set(stroker, 4 * 64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
+  */
 
     for (GLubyte c = 0; c < 128; c++)
     {
@@ -514,7 +523,16 @@ void Init (android_app* app){
             continue;
         }
         // Generate texture
+/*
+        FT_UInt glyphIndex = FT_Get_Char_Index(face, c);
+        FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 
+        FT_Glyph glyph;
+        FT_Get_Glyph(face->glyph, &glyph);
+        FT_Glyph_StrokeBorder(&glyph, stroker, false, true);
+        FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, nullptr, true);
+        FT_BitmapGlyph bitmapGlyph = reinterpret_cast<FT_BitmapGlyph>(glyph);
+*/
         //FT_Load_Glyph(face, FT_Get_Char_Index(face,c), FT_LOAD_TARGET_LIGHT);
 
         //FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
@@ -613,11 +631,14 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     //glViewport(0, 0, 400,400);
 
     GLuint MatrixID = glGetUniformLocation(programObject, "projection");
+
     glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 
     glUseProgram(programObject);
-
-
+    //GLuint MatrixID2 = glGetUniformLocation(programObject, "textColor");
+    //LOGE("COLOR_XX *** %d = %d ", programObject, MatrixID2);
+    //_LOGE("MatrixID2 %d", MatrixID2);
+    //glUniform3f(MatrixID2, 0.8f, 0.0f, 0.5f);
 
     glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
     //Projection = glm::ortho(0.0f, 500.0f, 0.0f, 400.0f);
@@ -645,9 +666,24 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     /*
     GLint vv = glGetUniformLocation(programObject, "textColor");
     _LOGE("COLOR_X __ %d = %d > %f, %f, %f", programObject, vv, 0.2f, 0.0f, 0.5f);
-    glUniform3f(vv, 0.2f, 0.0f, 0.5f);
+
     */
-    RenderText(m2, "Yanny", -0.3f, -0.5f, 0.005, glm::vec3(0.1, 0.8f, 0.2f));
+
+
+    static GLfloat ii = 0;
+    ii = ii +0.001f;
+    if(ii>=1.0f){
+        ii=0.0f;
+    }
+
+    static GLfloat ee = 0;
+    ee = ee +0.001f;
+    if(ee>=1.0f){
+        ee=0.0f;
+    }
+    std::string str= std::to_string(ee);
+
+    RenderText(m, "Yanny "+str, -0.3f, -0.5f, 0.005, glm::vec3(0.1, ee, ii));
 
     eglSwapBuffers(display, surface);
 
