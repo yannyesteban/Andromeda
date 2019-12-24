@@ -186,6 +186,51 @@ int ShadersManager::Program3(std::list<GLAttrib> pAttrib){
     return true;
 }
 
+int ShadersManager::Program(){
+    _LOGE("Program dos");
+    if(programObject == 0) {
+        return 0;
+    }
+
+    GLint linked;
+
+    glAttachShader(programObject, vertexShader);
+    // _LOGE("shader %s %s", programObject, vertexShader);
+    glAttachShader(programObject, fragmentShader);
+    std::list<GLAttrib>::iterator it;
+    _LOGE("yanny Bien 2");
+    for (it = mAttrib.begin(); it != mAttrib.end(); ++it) {
+        glBindAttribLocation(programObject, it->index, it->name.c_str());
+        _LOGE("YANNY glBindAttribLocation %d, %s",it->index, it->name.c_str());
+
+    }
+
+    glLinkProgram(programObject);
+    int n;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
+    _LOGE("compiling GL_MAX_VERTEX_ATTRIBS %d", n);
+    // Check the link status
+    glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
+    if(!linked) {
+        _LOGE("YANNY ERROR ONE");
+        GLint infoLen = 0;
+        glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
+        if(infoLen > 1) {
+            char* infoLog = (char*)malloc(sizeof(char) * infoLen);
+            glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
+            //esLogMessage("Error linking program:\n%s\n", infoLog);
+            free(infoLog);
+        }
+        glDeleteProgram(programObject);
+        return false;
+    }
+    //GLuint MatrixID = glGetUniformLocation(programObject, "projection");
+    //_LOGE("yanny MVP x => %d", MatrixID );
+
+    //_LOGE("yanny Bien x");
+    return true;
+}
+
 int ShadersManager::setVS(const char *name) {
 
 
@@ -319,4 +364,8 @@ GLuint ShadersManager::ReadShader(GLenum type, const char *pPath) {
 
     free(shaderSrc);
     return shader;
+}
+
+void ShadersManager::addAttrib(GLAttrib attrib) {
+    mAttrib.push_back(attrib);
 }

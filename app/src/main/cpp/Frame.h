@@ -14,11 +14,14 @@
 #define ANDROMEDA_FRAME_H
 #include <iostream>
 #include <string>
+
 #include "Asset.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <gl3stub.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftstroke.h>
+
+#include "Rectangle.h"
 
 #define VERTEX_POS_INDX 0
 #define VERTEX_NORMAL_INDX 1
@@ -45,17 +48,18 @@
 
 ShadersManager *m;
 ShadersManager *m2;
-
+Rectangle *R;
 GLint text[5];
 std::list<GLAttrib> lAttrib;
-
+GLfloat fx = 1.0;
+GLfloat fy = 1.0;
 struct Character {
     GLuint     TextureID;  // ID handle of the glyph texture
     glm::ivec2 Size;       // Size of glyph
     glm::ivec2 Bearing;    // Offset from baseline to left/top of glyph
     FT_Pos     Advance;    // Offset to advance to next glyph
 };
-
+GLfloat aspect = 1.0f;
 std::map<GLchar, Character> Characters;
 
 void RenderText(ShadersManager *s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
@@ -475,6 +479,19 @@ void Frame2(android_app* app, EGLDisplay display, EGLSurface surface){
 
 
 void Init (android_app* app){
+    struct engine* engine = (struct engine*)app->userData;
+
+    aspect = (float)engine->width/(float)engine->height;
+
+    if(aspect > 1){
+        fx = aspect;
+    }else{
+        fy = aspect;
+    }
+
+    _LOGE("aspect %f fx=%f, fy=%f", aspect, fx, fy);
+    R = new Rectangle();
+
     Asset::setAssetManager(app->activity->assetManager);
     m =  new ShadersManager();
     m->mAssetManager = app->activity->assetManager;
@@ -596,7 +613,7 @@ void Init (android_app* app){
     //text[2] = Texture(app->activity->assetManager, "png/mickey.png");
 
 
-
+    R->init();
 }
 void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 
@@ -604,8 +621,8 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 
 
 
-    glClearColor(1.0f,0.2f,0.1f, 1);
-    //glClearColor(1.0f,1.0f,0.5f, 1);
+    //glClearColor(1.0f,0.2f,0.1f, 1);
+    glClearColor(1.0f,1.0f,0.5f, 1);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -631,8 +648,17 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     //glViewport(0, 0, 400,400);
 
     GLuint MatrixID = glGetUniformLocation(programObject, "projection");
+    glm::mat4 projection;
+    projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 5.0f);
 
-    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+    glm::mat4 projection1 = glm::ortho(
+            0.0f,
+            static_cast<float>(5),
+            static_cast<float>(10),
+            0.0f,
+            0.0f,
+            10.0f
+    );
 
     glUseProgram(programObject);
     //GLuint MatrixID2 = glGetUniformLocation(programObject, "textColor");
@@ -640,7 +666,8 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     //_LOGE("MatrixID2 %d", MatrixID2);
     //glUniform3f(MatrixID2, 0.8f, 0.0f, 0.5f);
 
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+    //glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+    //projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
     //Projection = glm::ortho(0.0f, 500.0f, 0.0f, 400.0f);
 
     // Camera matrix
@@ -653,14 +680,14 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     glm::mat4 Model      = glm::mat4(1.0f);
     //LOGI("aspect1 %d", aspect);
 
-    float aspect = 0.5;
+    float aspect = 0.5f;
     float radians = 0;
-    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*aspect,1.0f));
+    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*fy,1.0f));
     //Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
-    float left = -0.0f, up = 0.0;
+    float left = -0.5f, up = 0.0;
     Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
     // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP        = Projection * View * Model ; // Remember, matrix multiplication is the other way around
+    glm::mat4 MVP        = projection * View * Model ; // Remember, matrix multiplication is the other way around
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
     /*
@@ -684,8 +711,9 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     std::string str= std::to_string(ee);
 
     RenderText(m, "Yanny "+str, -0.3f, -0.5f, 0.005, glm::vec3(0.1, ee, ii));
-
+    R->Render(MVP);
     eglSwapBuffers(display, surface);
+    R->end();
 
 }
 #endif //ANDROMEDA_FRAME_H

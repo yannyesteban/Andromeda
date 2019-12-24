@@ -12,7 +12,7 @@
 #include <GLES2/gl2ext.h>
 #include <list>
 #include "types.h"
-
+#include "Asset.h"
 class ShadersManager {
 public:
     ShadersManager();
@@ -20,6 +20,8 @@ public:
     GLuint Load( GLenum type, const char *shaderSrc);
     int createProgram(const char* vShaderStr, const char* fShaderStr);
     const char * ReadFile(AAssetManager* AA, const char * pPath);
+    void addAttrib(GLAttrib);
+    int Program();
     int Program1();
     int Program2(std::unordered_map<GLushort, std::string> pAttrib);
     int Program3(std::list<GLAttrib> pAttrib);
@@ -33,7 +35,11 @@ public:
     int setFS(const char *);
     AAssetManager *mAssetManager;
 
+    //static int m_staticValor;
+
 private:
+
+    std::list<GLAttrib> mAttrib;
 };
 
 

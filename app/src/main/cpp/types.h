@@ -29,6 +29,19 @@ struct GLAttrib{
     std::string name;
 };
 
+struct engine {
+    struct android_app* app;
+
+
+    int animating;
+    EGLDisplay display;
+    EGLSurface surface;
+    EGLContext context;
+    int32_t width;
+    int32_t width2;
+    int32_t height;
+
+};
 
 
 

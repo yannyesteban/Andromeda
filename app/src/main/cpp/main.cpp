@@ -19,18 +19,7 @@
 #include "types.h"
 #include "ShadersManager.h"
 #include "Frame.h"
-struct engine {
-    struct android_app* app;
 
-
-    int animating;
-    EGLDisplay display;
-    EGLSurface surface;
-    EGLContext context;
-    int32_t width;
-    int32_t height;
-
-};
 
 int initDisplay();
 int closeDisplay();
@@ -206,14 +195,10 @@ int initDisplay() {
     eglQuerySurface(display, surface, EGL_WIDTH, &width);
     eglQuerySurface(display, surface, EGL_HEIGHT, &height);
 
-    float aspect = 1;
-    if(height>width){
-        aspect = (float)width/(float)height;
-    }else{
-        aspect = (float)height/(float)width;
-    }
+    struct engine* engine = (struct engine*)app->userData;
+    engine->width = width;
+    engine->height = height;
 
-    _LOGE("aspect2 %f w:%d, h:%d ", aspect, width, height);
     // Initialize GL state.
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glEnable(GL_CULL_FACE);
@@ -282,16 +267,16 @@ void draw_frame() {
 
 void android_main(struct android_app* app1) {
 
+
+
     struct engine eng;
-
-
     app = app1;
     //memset(&eng, 0, sizeof(engine));
 
     _LOGE("HOLA MUNDO");
     //const char* suma = "yanny";
 
-    eng.width = 2424;
+
     app1->userData = &eng;
     app1->onAppCmd = handleCmd;
     app1->onInputEvent = handleInput;

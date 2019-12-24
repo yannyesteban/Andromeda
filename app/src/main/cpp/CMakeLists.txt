@@ -177,6 +177,7 @@ add_library( # Sets the name of the library.
         Asset.cpp
         ShadersManager.cpp
         cc.cpp
+        Rectangle.cpp
 
         )
 
