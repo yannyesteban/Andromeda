@@ -177,6 +177,9 @@ add_library( # Sets the name of the library.
         Asset.cpp
         ShadersManager.cpp
         cc.cpp
+        Texture2D.cpp
+        Sprite.cpp
+        SpriteText.cpp
         Rectangle.cpp
 
         )

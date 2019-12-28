@@ -14,7 +14,8 @@
 #define ANDROMEDA_FRAME_H
 #include <iostream>
 #include <string>
-
+#include <stdlib.h>
+#include <time.h>
 #include "Asset.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <gl3stub.h>
@@ -22,6 +23,7 @@
 #include <freetype/ftstroke.h>
 
 #include "Rectangle.h"
+//#include "Sprite.h"
 
 #define VERTEX_POS_INDX 0
 #define VERTEX_NORMAL_INDX 1
@@ -48,7 +50,15 @@
 
 ShadersManager *m;
 ShadersManager *m2;
-Rectangle *R;
+Rectangle *Rt;
+Rectangle *Rt2;
+Rectangle *Rt3;
+Sprite *S;
+SpriteText *Text;
+
+#define N_RECT 10
+Rectangle *R[N_RECT];
+
 GLint text[5];
 std::list<GLAttrib> lAttrib;
 GLfloat fx = 1.0;
@@ -479,9 +489,18 @@ void Frame2(android_app* app, EGLDisplay display, EGLSurface surface){
 
 
 void Init (android_app* app){
+    Asset::setAssetManager(app->activity->assetManager);
+
+
     struct engine* engine = (struct engine*)app->userData;
 
     aspect = (float)engine->width/(float)engine->height;
+
+
+
+
+
+    //glBindTexture(GL_TEXTURE_2D, text[1]);
 
     if(aspect > 1){
         fx = aspect;
@@ -490,9 +509,47 @@ void Init (android_app* app){
     }
 
     _LOGE("aspect %f fx=%f, fy=%f", aspect, fx, fy);
-    R = new Rectangle();
 
-    Asset::setAssetManager(app->activity->assetManager);
+    GLfloat w = 0.3f;
+    GLfloat h = 0.7f;
+    /*
+    Rt = new Rectangle(w, h);
+    Rt2 = new Rectangle(w, h);
+    Rt3 = new Rectangle(w, h);
+    */
+    GLfloat xx = (8.0 - w * N_RECT)/N_RECT;
+    GLfloat posY = -3.0;
+
+    srand (time(NULL));
+    /* generate secret number between 1 and 10: */
+
+
+
+    for(int i=0;i<N_RECT;i++){
+        R[i] = new Rectangle(w, h);
+
+        R[i]->setPos(xx*i-1.5,posY);
+
+        GLfloat rr = (double)( rand() % 256)/256 ;
+        GLfloat gg = (double)( rand() % 256)/256 ;
+        GLfloat bb = (double)( rand() % 256)/256 ;
+        R[i]->acc = 1.2 *(rand() % 100)/100;
+        R[i]->setColor({rr, gg,bb,1.0});
+    }
+
+/*
+    GLfloat deltaX = 0.5;
+
+    Rt->setPos(-1.0f,posY);
+    Rt->setColor({0.9, 0.2,0.8,1.0});
+
+    Rt2->setPos(-1.0f+0.5,posY);
+    Rt2->setColor({0.1, 0.8,0.4,1.0});
+
+    Rt3->setPos(-1.0f+1.0,posY);
+    Rt3->setColor({0.3, 0.4,0.8,1.0});
+*/
+
     m =  new ShadersManager();
     m->mAssetManager = app->activity->assetManager;
 
@@ -609,17 +666,50 @@ void Init (android_app* app){
     //lProgram[0] = m->programObject;
 
     //text[0] = Texture(app->activity->assetManager, "png/mario.png");
-    //text[1] = Texture(app->activity->assetManager, "png/instagram.png");
+    text[1] = Texture(app->activity->assetManager, "png/instagram.png");
     //text[2] = Texture(app->activity->assetManager, "png/mickey.png");
 
 
-    R->init();
+    //Rt->init();
+    //Rt2->init();
+    //Rt3->init();
+    S = new Sprite("png/barcelona.png");
+
+    S->init();
+    text[1] = Texture(app->activity->assetManager, "png/mario.png");
+
+    Texture2D T = Texture2D();
+
+    text[1]= T.bind("png/mickey.png");
+
+    //glBindTexture(GL_TEXTURE_2D, text[1]);
+    _LOGE("mTexture : %d, %s", text[1], "vvvvvv");
+    for(int i=0;i<N_RECT;i++){
+        R[i]->init();
+    }
+
+    Text = new SpriteText();
+    Text->init();
+
 }
 void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 
+    srand (time(NULL));
+    /* generate secret number between 1 and 10: */
 
-
-
+    double Fraction = 500.0;
+    GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
+    GLfloat DX2 = ((double) rand() / (RAND_MAX)) / Fraction;
+    GLfloat DX3 = ((double) rand() / (RAND_MAX)) / Fraction;
+/*
+    Rt->setPosY(0.005+DX);
+    Rt2->setPosY(0.005+DX2);
+    Rt3->setPosY(0.005+DX3);
+*/
+    for(int i=0;i<N_RECT;i++){
+        GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
+        R[i]->setPosY(0.005+DX);
+    }
 
     //glClearColor(1.0f,0.2f,0.1f, 1);
     glClearColor(1.0f,1.0f,0.5f, 1);
@@ -649,7 +739,7 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 
     GLuint MatrixID = glGetUniformLocation(programObject, "projection");
     glm::mat4 projection;
-    projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 5.0f);
+    projection = glm::ortho(-4.0f, 4.0f, -4.0f, 4.0f, -5.0f, 5.0f);
 
     glm::mat4 projection1 = glm::ortho(
             0.0f,
@@ -672,7 +762,7 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 
     // Camera matrix
     glm::mat4 View       = glm::lookAt(
-            glm::vec3(0,0,3), // Camera is at (4,3,-3), in World Space
+            glm::vec3(0,0,5), // Camera is at (4,3,-3), in World Space
             glm::vec3(0,0,0), // and looks at the origin
             glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
     );
@@ -697,23 +787,48 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     */
 
 
-    static GLfloat ii = 0;
-    ii = ii +0.001f;
-    if(ii>=1.0f){
-        ii=0.0f;
-    }
+/*
+    std::string str= std::to_string(Rt->getPosY());
+    std::string str2= std::to_string(Rt2->getPosY());
+    std::string str3= std::to_string(Rt3->getPosY());
 
-    static GLfloat ee = 0;
-    ee = ee +0.001f;
-    if(ee>=1.0f){
-        ee=0.0f;
-    }
-    std::string str= std::to_string(ee);
+    RenderText(m, "DY: "+str+", DY2: "+str2+", DY3: "+str3, -1.0f, -0.5f, 0.004, glm::vec3(0.4, 0.6, 0.6));
+*/
 
-    RenderText(m, "Yanny "+str, -0.3f, -0.5f, 0.005, glm::vec3(0.1, ee, ii));
-    R->Render(MVP);
+
+/*
+    std::string str2= std::to_string(DX);
+    std::string str3= std::to_string(DX3);
+
+    RenderText(m, "Rand "+str2+", Rand "+str3, -0.8f, -1.5f, 0.005, glm::vec3(0.1, ee, ii));
+*/
+
+
+
+    //Rt->Render(MVP);
+    //Rt2->Render(MVP);
+    //Rt3->Render(MVP);
+
+
+    static float scale =0.000f;
+    std::string scale2= std::to_string(scale);
+    scale += 0.00001f;
+    Text->Render(MVP,  "Hola Scale: "+scale2, -1.0f, -0.5f, scale, glm::vec3(0.4, 0.6, 0.6));
+    for(int i=0;i<N_RECT;i++){
+
+        R[i]->Render(MVP);
+    }
+    glBindTexture(GL_TEXTURE_2D, text[1]);
+    S->Render(MVP);
     eglSwapBuffers(display, surface);
-    R->end();
+    S->end();
+    //Rt->end();
+    //Rt2->end();
+    //Rt3->end();
+
+    for(int i=0;i<N_RECT;i++){
+        R[i]->end();
+    }
 
 }
 #endif //ANDROMEDA_FRAME_H

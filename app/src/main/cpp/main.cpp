@@ -2,6 +2,21 @@
 // Created by yanny on 16/12/2019.
 //
 
+
+
+/*
+ *
+ *
+ * Forward declaration
+
+    A declaration of the following form
+    struct name ;
+ * hides any previously declared meaning for the name name in the tag name space and declares name as a new struct name in current scope, which will be defined later. Until the definition appears, this struct name has incomplete type.
+
+This allows structs that refer to each other:
+*/
+ struct prueba ;
+
 #include <android/log.h>
 #include "Log.h"
 #include "cc.h"
@@ -18,6 +33,9 @@
 #include <jni.h>
 #include "types.h"
 #include "ShadersManager.h"
+#include "Texture2D.h"
+#include "Sprite.h"
+#include "SpriteText.h"
 #include "Frame.h"
 
 

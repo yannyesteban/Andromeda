@@ -233,9 +233,6 @@ int ShadersManager::Program(){
 
 int ShadersManager::setVS(const char *name) {
 
-
-
-
     vertexShader = ReadShader(GL_VERTEX_SHADER, name);
 
     return 1;
@@ -313,20 +310,12 @@ ShadersManager::~ShadersManager() {
 }
 
 GLuint ShadersManager::ReadShader(GLenum type, const char *pPath) {
-    _LOGE("ONE %s", pPath);
     Asset asset = Asset(pPath);
-    _LOGE("ONE - 1");
-
     asset.open();
-    _LOGE("ONE - 2");
     off_t fileLength = asset.getLength();
-    _LOGE("ONE - 3");
     char *shaderSrc = (char *) malloc(sizeof(char)*fileLength+1);
-    _LOGE("ONE - 4");
     int ii = asset.read((char *)shaderSrc, fileLength);
-    _LOGE("ONE - 5");
     shaderSrc[fileLength] = '\0';
-    _LOGE("ONE - 6 ?(ii %d) %d, %s", ii, fileLength,shaderSrc);
     GLuint shader;
     GLint compiled;
 

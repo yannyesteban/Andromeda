@@ -10,9 +10,8 @@
 #include <android/asset_manager.h>
 #include <png.h>
 #include <pngconf.h>
-struct dinfo{
-    AAsset* mAsset;
-};
+#include "types.h"
+
 struct text_png{
     GLuint texture;
     GLint format;
@@ -29,6 +28,12 @@ struct PNG_PROP{
     png_uint_32 width;
     png_uint_32 height;
 };
+
+
+struct dinfo{
+    AAsset* mAsset;
+};
+
 void callback_readPng(png_structp pStruct, png_bytep pData, png_size_t pSize) {
     //LOGW("xxx2.0 callback size:%d", pSize);
     dinfo * d = ((dinfo*)png_get_io_ptr(pStruct));

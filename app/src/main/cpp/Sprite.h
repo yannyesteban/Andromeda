@@ -1,33 +1,41 @@
 //
-// Created by Yanny on 23/12/2019.
+// Created by Yanny on 27/12/2019.
 //
 
-#ifndef ANDROMEDA_RECTANGLE_H
-#define ANDROMEDA_RECTANGLE_H
+#ifndef ANDROMEDA_SPRITE_H
+#define ANDROMEDA_SPRITE_H
+
+
+
 #include <EGL/egl.h>
 #include <GLES/gl.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <glm/glm.hpp>
 #include <gl3stub.h>
-
+#include "Texture2D.h"
 #include "ShadersManager.h"
 
-class Rectangle {
+
+
+class Sprite {
 public:
-    GLfloat width = 0.5f;
+
+    const char * source = "";
+
+    GLfloat width = 4.0f;
     GLfloat height = 1.0f;
 
     GLfloat posX = 0.0f;
     GLfloat posY = 0.0f;
     GLfloat posZ = 0.0f;
     GLfloat acc = 1.0f;
-    glm::vec4 color = {0.2f, 0.3f, 0.4f, 1.0f};
-
     ShadersManager *sh;
-    Rectangle();
-    Rectangle(GLfloat w, GLfloat h):width(w), height(h){};
-    //~Rectangle();
+
+    Sprite();
+    Sprite(const char * pPath):mPath(pPath){};
+    Sprite(const char * pPath, GLfloat w, GLfloat h):mPath(pPath),width(w), height(h){};
+    Sprite(GLfloat w, GLfloat h):width(w), height(h){};
 
     void init();
     void end();
@@ -41,12 +49,15 @@ public:
     GLfloat getPosY();
     GLfloat getPosZ();
 
-    void setColor(glm::vec4 pColor);
+    void setTexture(glm::vec4 pColor);
     void Render(glm::mat4 MVP);
+
+
 private:
     GLuint vboIds[2];
-
+    GLint mTexture;
+    const char * mPath = "";
 };
 
 
-#endif //ANDROMEDA_RECTANGLE_H
+#endif //ANDROMEDA_SPRITE_H

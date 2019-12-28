@@ -4,6 +4,9 @@
 
 #ifndef RINCONADA_TYPES_H
 #define RINCONADA_TYPES_H
+#include <EGL/egl.h>
+#include <png.h>
+#include <pngconf.h>
 //#include <GLES/gl.h>
 //#include <GLES2/gl2.h>
 

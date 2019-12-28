@@ -31,13 +31,13 @@ public:
     static void setDataPath(const char * pInternalDataPath,  const char * pExternalDataPath);
 
     bool operator==(const Asset& pOther);
-
+    static AAssetManager * _assetManager;
 private:
 
     AAsset* _asset;
     const char* _path;
 
-    static AAssetManager * _assetManager;
+
     static const char * _externalDataPath;
     static const char * _internalDataPath;
 

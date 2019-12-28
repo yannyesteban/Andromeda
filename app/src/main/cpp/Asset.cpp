@@ -34,6 +34,15 @@ int Asset::open() {
     }
     _asset = AAssetManager_open(_assetManager, _path, AASSET_MODE_UNKNOWN);
     _LOGE("ONE - A2  .%d", (_asset != NULL) ? 1 : 0);
+
+
+    off_t outStart;
+
+    off_t fileLength = AAsset_getLength(_asset);
+    int descriptor = AAsset_openFileDescriptor(_asset, &outStart, &fileLength);
+    _LOGE("ONE PNG 555 xxx longitud: %d", fileLength);
+
+
     return (_asset != NULL) ? 1 : 0;
 }
 

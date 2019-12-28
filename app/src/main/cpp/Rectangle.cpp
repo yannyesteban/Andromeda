@@ -31,19 +31,19 @@ void Rectangle::Render(glm::mat4 MVP) {
     GLint vv = glGetUniformLocation(sh->programObject, "textColor");
 
 
-    static GLfloat x= 0;
+    //static GLfloat x= 0;
 
 
-    color.x = x;
-    x = x +0.001f;
+    //color.x = x;
+    //x = x +0.001f;
     _LOGE("COLOR_X *** %d = %d > %f, %f, %f, %f", sh->programObject, vv, color.x, color.y, color.z, color.w);
     glUniform4f(vv, color.x, color.y, color.z, color.w);
 
     GLfloat vVertices[] = {
-            0.0f,  0.0f,  0.0f,
-            0.5f,  0.0f,  0.0f,
-            0.5f,  0.5f,  0.0f,
-            0.0f,  0.5f,  0.0f,
+            posX+0.0f,  posY+0.0f,  posZ+0.0f,
+            posX+width,  posY+0.0f,  posZ+0.0f,
+            posX+width,  posY+height,  posZ+0.0f,
+            posX+0.0f,  posY+height,  posZ+0.0f,
     };
 
     GLushort  indices[] = {0,1,2,0,2,3};
@@ -86,3 +86,34 @@ void Rectangle::end() {
     glDeleteBuffers(2, vboIds);
 
 }
+
+void Rectangle::setPos(GLfloat x, GLfloat y) {
+    posX = x;
+    posY = y;
+
+}
+
+void Rectangle::setColor(glm::vec4 pColor) {
+    color =pColor;
+}
+
+void Rectangle::setPosX(GLfloat x) {
+    posX = x;
+}
+void Rectangle::setPosY(GLfloat y) {
+    posY += y*acc;
+}
+void Rectangle::setPosZ(GLfloat z) {
+    posZ = z;
+}
+
+GLfloat Rectangle::getPosX() {
+    return posX;
+}
+GLfloat Rectangle::getPosY() {
+    return posY;
+}
+GLfloat Rectangle::getPosZ() {
+    return posZ ;
+}
+
