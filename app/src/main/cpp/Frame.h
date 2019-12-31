@@ -1006,11 +1006,11 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     glDepthFunc(GL_LEQUAL);
 
     if(Reset==0){
-        world.Reset();
+        //world.Reset();
         for(int i=0;i<N_RECT;i++){
             _LOGE("AInputEvent RESET x 2 %d", i);
             //GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
-            //R[i]->setPosY(-1.0);
+            R[i]->setPosY(-2.0);
         }
         Reset = 1;
     }
@@ -1046,7 +1046,7 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 */
     for(int i=0;i<N_RECT;i++){
         GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
-        R[i]->setPosY( 0.005+DX);
+        R[i]->setPosY( R[i]->getPosY()+0.005+DX);
     }
 
 

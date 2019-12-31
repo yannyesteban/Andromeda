@@ -83,7 +83,7 @@ void Rectangle::setPosX(GLfloat x) {
     posX = x;
 }
 void Rectangle::setPosY(GLfloat y) {
-    posY += y*acc;
+    posY = y*acc;
 }
 void Rectangle::setPosZ(GLfloat z) {
     posZ = z;
@@ -99,3 +99,10 @@ GLfloat Rectangle::getPosZ() {
     return posZ ;
 }
 
+void Rectangle::Reset() {
+    posX = 0.0f;
+    posY = -2.0f;
+    posZ = 0.0f;
+
+
+}

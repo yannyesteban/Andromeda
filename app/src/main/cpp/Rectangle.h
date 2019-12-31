@@ -19,9 +19,9 @@ public:
     GLfloat width = 0.5f;
     GLfloat height = 1.0f;
 
-    GLfloat posX = 0.0f;
-    GLfloat posY = 0.0f;
-    GLfloat posZ = 0.0f;
+    //GLfloat posX = 0.0f;
+    //GLfloat posY = 0.0f;
+    //GLfloat posZ = 0.0f;
     GLfloat acc = 1.0f;
     glm::vec4 color = {0.2f, 0.3f, 0.4f, 1.0f};
 
@@ -44,6 +44,7 @@ public:
 
     void setColor(glm::vec4 pColor);
     void Render(glm::mat4 MVP);
+    void Reset();
 private:
     GLuint vboIds[2];
     GLint mMVPId;

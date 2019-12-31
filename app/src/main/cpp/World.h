@@ -18,13 +18,18 @@ public:
     virtual void init() = 0;
     virtual void Render(glm::mat4 MVP) = 0;
     virtual void end() = 0;
-    virtual void Reset();
+    virtual void Reset() = 0;
+    virtual void PosIni(GLfloat x, GLfloat y, GLfloat z);
     GLfloat width = 0.5f;
     GLfloat height = 1.0f;
 
     GLfloat posX = 0.0f;
     GLfloat posY = 0.0f;
     GLfloat posZ = 0.0f;
+
+    GLfloat iniX = 0.0f;
+    GLfloat iniY = 0.0f;
+    GLfloat iniZ = 0.0f;
 
 };
 

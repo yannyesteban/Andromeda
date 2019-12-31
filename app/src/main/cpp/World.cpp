@@ -13,13 +13,10 @@ basicObj::~basicObj() {
 
 }
 
-void basicObj::Reset() {
-    posX = 0.0f;
-    posY = -2.0f;
-    posZ = 0.0f;
-
+void basicObj::PosIni(GLfloat x, GLfloat y, GLfloat posX) {
 
 }
+
 
 World::World(){
 
