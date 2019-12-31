@@ -16,6 +16,12 @@ Asset::Asset(const char *pPath):
     _asset(nullptr)
     {
 }
+Asset::Asset(const char *pPath, int pMode):
+    _path(pPath),
+    _mode(pMode),
+    _asset(nullptr) {
+
+}
 
 void Asset::setAssetManager(AAssetManager *pAssetManager) {
     Asset::_assetManager = pAssetManager;
@@ -30,9 +36,10 @@ int Asset::open() {
     _LOGE("ONE - A1 %s", _path);
 
     if(_assetManager){
+
         _LOGE("ONE - A.001 %s", _path);
     }
-    _asset = AAssetManager_open(_assetManager, _path, AASSET_MODE_UNKNOWN);
+/*
     _LOGE("ONE - A2  .%d", (_asset != NULL) ? 1 : 0);
 
 
@@ -41,8 +48,8 @@ int Asset::open() {
     off_t fileLength = AAsset_getLength(_asset);
     int descriptor = AAsset_openFileDescriptor(_asset, &outStart, &fileLength);
     _LOGE("ONE PNG 555 xxx longitud: %d", fileLength);
-
-
+*/
+    _asset = AAssetManager_open(_assetManager, _path, _mode);
     return (_asset != NULL) ? 1 : 0;
 }
 
@@ -81,3 +88,6 @@ bool Asset::operator==(const Asset& pOther) {
 off_t Asset::getLength() {
     return AAsset_getLength(_asset);
 }
+
+
+

@@ -13,37 +13,27 @@ Rectangle::Rectangle() {
 void Rectangle::init() {
 
     sh =  new ShadersManager();
-    //m2->mAssetManager = app->activity->assetManager;
-
     sh->setVS("shaders/solid_vs.glsl");
     sh->setFS("shaders/solid_fs.glsl");
-
-
     sh->addAttrib({0, 3, "vPosition"});
-    //sh->addAttrib({1, 2, "aColor"});
     sh->Program();
+    mMVPId = sh->getUniformLocation("MVP");
 
 }
 
 void Rectangle::Render(glm::mat4 MVP) {
     glUseProgram(sh->programObject);
 
-    GLint vv = glGetUniformLocation(sh->programObject, "textColor");
+    glUniformMatrix4fv(mMVPId, 1, GL_FALSE, &MVP[0][0]);
 
-
-    //static GLfloat x= 0;
-
-
-    //color.x = x;
-    //x = x +0.001f;
-    _LOGE("COLOR_X *** %d = %d > %f, %f, %f, %f", sh->programObject, vv, color.x, color.y, color.z, color.w);
-    glUniform4f(vv, color.x, color.y, color.z, color.w);
+    GLint textColor = glGetUniformLocation(sh->programObject, "textColor");
+    glUniform4f(textColor, color.x, color.y, color.z, color.w);
 
     GLfloat vVertices[] = {
-            posX+0.0f,  posY+0.0f,  posZ+0.0f,
-            posX+width,  posY+0.0f,  posZ+0.0f,
-            posX+width,  posY+height,  posZ+0.0f,
-            posX+0.0f,  posY+height,  posZ+0.0f,
+            posX,       posY,         posZ,
+            posX+width, posY,         posZ,
+            posX+width, posY+height,  posZ,
+            posX,       posY+height,  posZ,
     };
 
     GLushort  indices[] = {0,1,2,0,2,3};
@@ -68,16 +58,8 @@ void Rectangle::Render(glm::mat4 MVP) {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vtxStride, (const void*)offset);
     offset += 3 * sizeof(GLfloat);
-    glVertexAttribPointer(1, 2,    GL_FLOAT, GL_FALSE, vtxStride,     (const void*)offset);
+    glVertexAttribPointer(1, 2,    GL_FLOAT, GL_FALSE, vtxStride, (const void*)offset);
 
-    _LOGE(" FRAME -a-  draw_frame");
-
-    GLuint programObject = sh->programObject;
-
-    GLuint MatrixID = glGetUniformLocation(programObject, "MVP");
-
-
-    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
 
 }

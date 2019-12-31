@@ -37,7 +37,18 @@ This allows structs that refer to each other:
 #include "Sprite.h"
 #include "SpriteText.h"
 #include "Frame.h"
+#include "EventEngine.h"
+#include <NDKHelper.h>
 
+int suma(int a, int b){
+    _LOGE("AInputEvent ONE");
+    return a+b;
+}
+
+int resta(int a, int b){
+    _LOGE("AInputEvent TWO");
+    return a-b;
+}
 
 int initDisplay();
 int closeDisplay();
@@ -87,8 +98,19 @@ void handleCmd(android_app* app, int32_t cmd){
 
 
 int32_t handleInput(android_app* app, AInputEvent* event){
-    _LOGE("handleInput()");
 
+
+    struct engine* eng = (struct engine*)app->userData;
+
+    if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+        _LOGE("AInputEvent II");
+        //EventEngine ee = EventEngine();
+        eng->Event.process(event);
+
+        return 1;
+    }
+
+    return 0;
 
     //ndk_helper::DragDetector drag;
     //ndk_helper::GESTURE_STATE xxx = drag.Detect(event);
@@ -100,6 +122,60 @@ int32_t handleInput(android_app* app, AInputEvent* event){
 
     //Windows & windows = *(Windows*)app->userData;
     if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+
+        ndk_helper::GESTURE_STATE doubleTapState = eng->doubletap_detector_.Detect(event);
+        ndk_helper::GESTURE_STATE dragState = eng->drag_detector_.Detect(event);
+        ndk_helper::GESTURE_STATE pinchState = eng->pinch_detector_.Detect(event);
+
+        // Double tap detector has a priority over other detectors
+        if (doubleTapState == ndk_helper::GESTURE_STATE_ACTION) {
+            // Detect double tap
+            _LOGE("GESTURE doubleTapState");
+            eng->tap_camera_.Reset(true);
+        } else {
+            // Handle drag state
+            if (dragState & ndk_helper::GESTURE_STATE_START) {
+                _LOGE("GESTURE start dragging");
+
+                // Otherwise, start dragging
+                ndk_helper::Vec2 v;
+                eng->drag_detector_.GetPointer(v);
+                //eng->TransformPosition(v);
+                eng->tap_camera_.BeginDrag(v);
+            } else if (dragState & ndk_helper::GESTURE_STATE_MOVE) {
+                _LOGE("GESTURE GESTURE_STATE_MOVE");
+
+                ndk_helper::Vec2 v;
+                eng->drag_detector_.GetPointer(v);
+                //eng->TransformPosition(v);
+                eng->tap_camera_.Drag(v);
+            } else if (dragState & ndk_helper::GESTURE_STATE_END) {
+                _LOGE("GESTURE start end");
+                eng->tap_camera_.EndDrag();
+            }
+
+            // Handle pinch state
+            if (pinchState & ndk_helper::GESTURE_STATE_START) {
+                _LOGE("GESTURE Handle pinch state");
+
+                // Start new pinch
+                ndk_helper::Vec2 v1;
+                ndk_helper::Vec2 v2;
+                eng->pinch_detector_.GetPointers(v1, v2);
+                //eng->TransformPosition(v1);
+                //eng->TransformPosition(v2);
+                eng->tap_camera_.BeginPinch(v1, v2);
+            } else if (pinchState & ndk_helper::GESTURE_STATE_MOVE) {
+                // Multi touch
+                // Start new pinch
+                ndk_helper::Vec2 v1;
+                ndk_helper::Vec2 v2;
+                eng->pinch_detector_.GetPointers(v1, v2);
+                //eng->TransformPosition(v1);
+                //eng->TransformPosition(v2);
+                eng->tap_camera_.Pinch(v1, v2);
+            }
+        }
         int32_t touchX;
         int32_t touchY;
         //windows.touchX = AMotionEvent_getX(event, 0);
@@ -216,6 +292,8 @@ int initDisplay() {
     struct engine* engine = (struct engine*)app->userData;
     engine->width = width;
     engine->height = height;
+    engine->Event.screenWidth = width;
+    engine->Event.screenHeight = height;
 
     // Initialize GL state.
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -293,7 +371,18 @@ void android_main(struct android_app* app1) {
 
     _LOGE("HOLA MUNDO");
     //const char* suma = "yanny";
+    eng.Event = EventEngine();
 
+    Button::Event = &eng.Event;
+
+
+    /*
+    Button *b2 = new Button(0,400, 300, 300);
+    b2->AttachEvent("click", suma);
+
+    Button *b = new Button(0,0, 300, 300);
+    b->AttachEvent("click", resta);
+    */
 
     app1->userData = &eng;
     app1->onAppCmd = handleCmd;

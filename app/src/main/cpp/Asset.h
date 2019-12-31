@@ -17,8 +17,9 @@ class Asset {
 public:
 
     Asset(const char* pPath);
-
+    Asset(const char* pPath, int pMode);
     int open();
+
     void close();
 
     int read(void* pBuffer, size_t pCount);
@@ -40,6 +41,8 @@ private:
 
     static const char * _externalDataPath;
     static const char * _internalDataPath;
+
+    int _mode = AASSET_MODE_UNKNOWN;
 
 
 };

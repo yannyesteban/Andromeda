@@ -12,6 +12,8 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include <NDKHelper.h>
+#include "EventEngine.h"
 
 struct GMv6{
     glm::vec3 v;
@@ -43,6 +45,15 @@ struct engine {
     int32_t width;
     int32_t width2;
     int32_t height;
+
+    ndk_helper::DoubletapDetector doubletap_detector_;
+    ndk_helper::PinchDetector pinch_detector_;
+    ndk_helper::DragDetector drag_detector_;
+    ndk_helper::PerfMonitor monitor_;
+
+    ndk_helper::TapCamera tap_camera_;
+
+    EventEngine Event;
 
 };
 

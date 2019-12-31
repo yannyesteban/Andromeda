@@ -12,8 +12,9 @@
 #include <gl3stub.h>
 
 #include "ShadersManager.h"
+#include "World.h"
 
-class Rectangle {
+class Rectangle: public  basicObj {
 public:
     GLfloat width = 0.5f;
     GLfloat height = 1.0f;
@@ -45,6 +46,7 @@ public:
     void Render(glm::mat4 MVP);
 private:
     GLuint vboIds[2];
+    GLint mMVPId;
 
 };
 

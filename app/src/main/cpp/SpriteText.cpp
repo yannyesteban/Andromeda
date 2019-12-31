@@ -11,19 +11,13 @@ SpriteText::SpriteText() {
 
 void SpriteText::init() {
 
-
-
-
     FT_Library ft;
     FT_Face face;
     if (FT_Init_FreeType(&ft)){
         _LOGE("ERROR::FREETYPE: Could not init FreeType Library");
     }
 
-    Asset *asset = new Asset("fonts/arial.ttf");
-
-    //AAsset* mAsset;
-    //mAsset = AAssetManager_open(mAssetManager, pPath, AASSET_MODE_UNKNOWN);
+    Asset *asset = new Asset("fonts/arial.ttf", AASSET_MODE_BUFFER);
 
     if(asset->open()){
         _LOGE("PNG - cool");
@@ -31,12 +25,18 @@ void SpriteText::init() {
         _LOGE("PNG - error 1");
     }
 
-
+    /*
     AAsset* fontFile = AAssetManager_open(Asset::_assetManager, "fonts/arial.ttf", AASSET_MODE_BUFFER);
     off_t fontDataSize = AAsset_getLength(fontFile);
     FT_Byte* fontData = new FT_Byte[fontDataSize];
     AAsset_read(fontFile, fontData, (size_t) fontDataSize);
     AAsset_close(fontFile);
+    */
+
+    off_t fontDataSize = asset->getLength();
+    FT_Byte* fontData = new FT_Byte[fontDataSize];
+    asset->read(fontData, (size_t) fontDataSize);
+    asset->close();
     if (FT_New_Memory_Face(ft, (const FT_Byte*)fontData, (FT_Long)fontDataSize, 0, &face)) {
         _LOGE("ERROR::FREETYPE:Load memory failed");
     }
@@ -65,7 +65,7 @@ void SpriteText::init() {
             continue;
         }
         // Generate texture
-/*
+        /*
         FT_UInt glyphIndex = FT_Get_Char_Index(face, c);
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 
@@ -74,7 +74,7 @@ void SpriteText::init() {
         FT_Glyph_StrokeBorder(&glyph, stroker, false, true);
         FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, nullptr, true);
         FT_BitmapGlyph bitmapGlyph = reinterpret_cast<FT_BitmapGlyph>(glyph);
-*/
+        */
         //FT_Load_Glyph(face, FT_Get_Char_Index(face,c), FT_LOAD_TARGET_LIGHT);
 
         //FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
@@ -99,8 +99,6 @@ void SpriteText::init() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-
         // Now store character for later use
         Character2 character = {
                 texture,
@@ -109,7 +107,6 @@ void SpriteText::init() {
                 face->glyph->advance.x
         };
 
-        //_LOGE("ERROR::FREETYPE: %s", c);
         Characters.insert(std::pair<GLchar, Character2>(c, character));
     }
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -122,28 +119,26 @@ void SpriteText::init() {
     if (FT_New_Face(ft, "/assets/fonts/baily.ttf", 0, &face)){
         _LOGE("ERROR::FREETYPE: Failed to load font");
     }
-     */
+    */
 
     sh =  new ShadersManager();
-    //m2->mAssetManager = app->activity->assetManager;
-
     sh->setVS("shaders/font_vs.glsl");
     sh->setFS("shaders/font_fs.glsl");
-
     sh->addAttrib({0, 4, "vertex"});
-    _LOGE("FONT 2000.0");
     sh->Program();
+    mMVPId = sh->getUniformLocation("projection");
+    mTextColorId = glGetUniformLocation(sh->programObject, "textColor");
+
 }
 
 void SpriteText::Render(glm::mat4 MVP, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
-    ;
-    GLuint programObject = sh->programObject;
+
+
+    glUseProgram(sh->programObject);
+    glUniform3f(mTextColorId, color.x, color.y, color.z);
+    glUniformMatrix4fv(mMVPId, 1, GL_FALSE, &MVP[0][0]);
 
     // Activate corresponding render state
-
-    _LOGE("FONT 2000.1");
-    _LOGE("FONT 2000.1 %s", text.c_str());
-
     //glBindVertexArray(VAO);
 
     // Iterate through all characters
@@ -159,18 +154,8 @@ void SpriteText::Render(glm::mat4 MVP, std::string text, GLfloat x, GLfloat y, G
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
-    //glUseProgram(programObject);
-
-    GLint vv = glGetUniformLocation(sh->programObject, "textColor");
-
-    _LOGE("FONT 2000.2");
-    //_LOGE("COLOR_X *** %d = %d > %f, %f, %f", programObject, vv, color.x, color.y, color.z);
-    glUniform3f(vv, color.x, color.y, color.z);
-
-
     for (c = text.begin(); c != text.end(); c++)
     {
-        _LOGE("FONT 2000.4");
         Character2 ch = Characters[*c];
 
         GLfloat xpos = x + ch.Bearing.x * scale;
@@ -197,12 +182,12 @@ void SpriteText::Render(glm::mat4 MVP, std::string text, GLfloat x, GLfloat y, G
         //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
         //glBindBuffer(GL_ARRAY_BUFFER, 0);
         // Render quad
+
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
         x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
         //x += (ch.Advance / 64);
     }
-    _LOGE("FONT 2000.5");
     glDisableVertexAttribArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }

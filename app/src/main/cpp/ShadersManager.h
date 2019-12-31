@@ -25,6 +25,9 @@ public:
     int Program1();
     int Program2(std::unordered_map<GLushort, std::string> pAttrib);
     int Program3(std::list<GLAttrib> pAttrib);
+
+    GLuint getUniformLocation(const char *);
+
     GLuint programObject;
     GLuint vertexShader;
     GLuint fragmentShader;

@@ -181,6 +181,9 @@ add_library( # Sets the name of the library.
         Sprite.cpp
         SpriteText.cpp
         Rectangle.cpp
+        EventEngine.cpp
+        GameEngine.cpp
+        World.cpp
 
         )
 

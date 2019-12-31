@@ -358,3 +358,7 @@ GLuint ShadersManager::ReadShader(GLenum type, const char *pPath) {
 void ShadersManager::addAttrib(GLAttrib attrib) {
     mAttrib.push_back(attrib);
 }
+
+GLuint ShadersManager::getUniformLocation(const char * pName) {
+    return  glGetUniformLocation(programObject, pName);
+}

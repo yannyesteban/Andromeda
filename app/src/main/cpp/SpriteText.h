@@ -66,8 +66,10 @@ public:
 private:
     GLuint vboIds[2];
     GLint mTexture;
+    GLint mMVPId;
+    GLint mTextColorId;
 
-const char * mPath = "";
+    const char * mPath = "";
 };
 
 
