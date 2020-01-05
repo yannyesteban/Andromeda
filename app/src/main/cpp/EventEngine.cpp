@@ -6,6 +6,8 @@
 
 #include "EventEngine.h"
 #include "Log.h"
+#include "iEvent.h"
+//#include "iButton.h"
 
 EventEngine * Button::Event = nullptr;
 
@@ -13,6 +15,11 @@ ElemEvent::ElemEvent() {}
 Button::Button() {
 
 }
+
+
+
+
+
 
 void Button::AttachEvent(const char *name, int (*call)(int a, int b), glm::mat4 MVP) {
 
@@ -45,6 +52,22 @@ void EventEngine::process(const AInputEvent* event) {
     float x = (float)touchX/screenWidth;
     float y =  1-(float)touchY/screenHeight;
 
+
+    for(int i =0;i<nButtons;i++){
+        iButton *B = (iButton*)buttons[i];
+        if(B->isIn(x, y)){
+            ElemEvent ev;
+            ev.x= x;
+            ev.y= y;
+            ev.index = i;
+            ev.context = B->getContext();
+            B->callEvent(ev);
+            //B->call(x, y);
+        }
+
+    }
+
+    return;
     _LOGE("AInputEvent Width %f", x);
     for(int i =0;i<n;i++){
         _LOGE("AInputEvent (i) %d",i);
@@ -105,5 +128,31 @@ void EventEngine::AttachEvent(Area area, const char *name, int (*call)(int a, in
     n++;
     _LOGE("AInputEvent n: %d", n);
 }
+
+void EventEngine::AttachEvent(iButton * iButton, const char *name) {
+
+
+    //_LOGE("AInputEvent xxx: %d", nButtons);
+    buttons[nButtons] = iButton;
+
+    //obj[n]->area = area;
+    //obj[n]->call = call;
+   // buttons[nButtons]->MVP = MVP;
+    nButtons++;
+
+
+}
+
+void EventEngine::is(iButton * B) {
+    //_LOGE("AInputEvent U3: %d", B);
+    nButtons++;
+    //buttons[nButtons] = B;
+    //b=B;
+    //obj[n]->area = area;
+    //obj[n]->call = call;
+    // buttons[nButtons]->MVP = MVP;
+    nButtons++;
+}
+
 
 

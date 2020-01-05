@@ -7,6 +7,13 @@
 #include <android/input.h>
 #include <glm/glm.hpp>
 
+
+
+
+
+
+class iButton;
+
 struct Area{
     int x;
     int y;
@@ -17,11 +24,14 @@ class ElemEvent{
 public:
     ElemEvent();
     Area area;
-    int x;
-    int y;
-    int width;
-    int height;
+    float x;
+    float y;
+    float width;
+    float height;
     int (*call)(int a, int b);
+    int index = 0;
+    iButton *context;
+
     glm::mat4 MVP;
 };
 
@@ -34,9 +44,17 @@ public:
     EventEngine();
     ~EventEngine();
     void AttachEvent(Area area, const char * name, int (*call)(int a, int b), glm::mat4 MVP);
+    void AttachEvent(iButton * iButton, const char * name);
+
     void process(const AInputEvent* motion_event);
+
+    void is(iButton *);
     int n = 0;
+    iButton  *buttons[100];
+    iButton  *b;
+    int nButtons = 0;
 private:
+
 
 };
 

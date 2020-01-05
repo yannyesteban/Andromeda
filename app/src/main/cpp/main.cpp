@@ -40,6 +40,9 @@ This allows structs that refer to each other:
 #include "EventEngine.h"
 #include <NDKHelper.h>
 
+#include <sys/socket.h>
+#include <error.h>
+
 int suma(int a, int b){
     _LOGE("AInputEvent ONE");
     return a+b;
@@ -365,6 +368,7 @@ void android_main(struct android_app* app1) {
 
 
 
+
     struct engine eng;
     app = app1;
     //memset(&eng, 0, sizeof(engine));
@@ -374,6 +378,7 @@ void android_main(struct android_app* app1) {
     eng.Event = EventEngine();
 
     Button::Event = &eng.Event;
+    iButton::Event = &eng.Event;
 
 
     /*

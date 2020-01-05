@@ -30,6 +30,8 @@ public:
     Rectangle(GLfloat w, GLfloat h):width(w), height(h){};
     //~Rectangle();
 
+    glm::mat4 MVP;
+
     void init();
     void end();
     void setPos(GLfloat x, GLfloat y);
@@ -45,9 +47,12 @@ public:
     void setColor(glm::vec4 pColor);
     void Render(glm::mat4 MVP);
     void Reset();
+    void setName(char * name);
+    const char * getName();
 private:
     GLuint vboIds[2];
     GLint mMVPId;
+    const char * mName = nullptr;
 
 };
 

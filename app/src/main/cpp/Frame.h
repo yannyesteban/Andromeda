@@ -21,8 +21,12 @@
 #include <gl3stub.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftstroke.h>
-
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
 #include "Rectangle.h"
+#include "iEvent.h"
 //#include "Sprite.h"
 
 #define VERTEX_POS_INDX 0
@@ -48,11 +52,66 @@
 #define VERTEX_TEXCOORD1_INDEX 4
 #define VERTEX_TEXCOORD2_INDEX 5
 
+
+//valentina*0406
+
 int Reset = 0;
 int suma1(int a, int b){
     Reset = 0;
     return a+b;
 }
+
+void myCall(float x, float y){
+    Reset = 0;
+
+    _LOGE("AInputEvent sButton Reset: %f, %f", x, y);
+
+}
+
+GLfloat mDelta = 0.0f;
+GLfloat mDeltaX = 0.0f;
+GLfloat mDeltaY = 0.0f;
+
+void myCall2(ElemEvent event){
+    sButton *s = (sButton*)event.context;
+
+    switch(event.index){
+        case 0:
+            Reset = 0;
+            mDelta = 0.0;
+            mDeltaX = 0.0;
+            break;
+        case 1:
+            mDelta = mDelta + 0.001f;
+            break;
+        case 2:
+            mDelta = mDelta - 0.001f;
+            if(mDelta < 0.0){
+                mDelta = 0.0;
+            }
+            break;
+        case 3:
+            mDeltaX = mDeltaX - 0.1f;
+            if(mDeltaX < 0.0){
+                //mDelta = 0.0;
+            }
+            break;
+        case 4:
+            mDeltaX = mDeltaX + 0.1f;
+            if(mDeltaX < 0.0){
+               // mDeltaX = 0.0;
+            }
+            break;
+
+    }
+    //Reset = 0;
+
+
+    _LOGE("AInputEvent sButton Reset III: %f, %f, width:%f", event.x, event.y,s->width);
+    _LOGE("AInputEvent sButton Reset III: name %s", s->getName());
+
+}
+
 ShadersManager *m;
 ShadersManager *m2;
 Rectangle *Rt;
@@ -77,7 +136,7 @@ struct Character {
 GLfloat aspect = 1.0f;
 std::map<GLchar, Character> Characters;
 
-
+glm::mat4 MVP;
 World world;
 
 void RenderText(ShadersManager *s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
@@ -849,6 +908,11 @@ void Frame3(android_app* app, EGLDisplay display, EGLSurface surface){
 
 
 void Init (android_app* app){
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    int err = errno;
+    _LOGE("HOLA MUNDO SOCKECT 3 %d error %d", sockfd, errno);
+
+
     Asset::setAssetManager(app->activity->assetManager);
 
 
@@ -870,16 +934,12 @@ void Init (android_app* app){
     Rt3 = new Rectangle(w, h);
     */
     GLfloat xx = (8.0 - w * N_RECT)/N_RECT;
-    GLfloat posY = -3.0;
+    GLfloat posY = -5.0;
 
     srand (time(NULL));
     /* generate secret number between 1 and 10: */
-
-
-
     for(int i=0;i<N_RECT;i++){
         R[i] = new Rectangle(w, h);
-
         R[i]->setPos(xx*i-1.5,posY);
 
         GLfloat rr = (double)( rand() % 256)/256 ;
@@ -889,7 +949,6 @@ void Init (android_app* app){
         R[i]->setColor({rr, gg,bb,1.0});
         world.add(R[i]);
     }
-
 /*
     GLfloat deltaX = 0.5;
 
@@ -903,12 +962,12 @@ void Init (android_app* app){
     Rt3->setColor({0.3, 0.4,0.8,1.0});
 */
 
-    Rectangle *rect = new Rectangle(1.0f,1.0f);
+    /*Rectangle *rect = new Rectangle(1.0f,1.0f);
     rect->setPos(2.5f,3.0f);
     rect->setColor({0.5f, 0.2f,0.3f,1.0});
 
     world.add(rect);
-
+*/
 
     //Button *b2 = new Button(11,398, 300, 300);
     //b2->AttachEvent("click", suma1);
@@ -964,29 +1023,66 @@ void Init (android_app* app){
 
 
 
-    GLfloat bX = -2.0f;
-    GLfloat bY = -2.0f;
+    GLfloat bX = -3.0f;
+    GLfloat bY = 5.0f;
     GLfloat bW = 1.0f;
     GLfloat bH = 1.0f;
 
-    Rectangle *gButton = new Rectangle(bW,bH);
+    sButton *gButton = new sButton(bW,bH);
     gButton->setPos(bX, bY);
+    gButton->setName("yanny");
     gButton->setColor({0.2f, 0.6f,0.4f,1.0});
 
     world.add(gButton);
-    Button *xButton = new Button(bX, bY, bW, bH);
-    xButton->AttachEvent("click", suma1, MVP);
+    //Button *xButton = new Button(bX, bY, bW, bH);
+    gButton->AttachEvent("click", myCall2);
 /*
 */
-    Rectangle *gButton2 = new Rectangle(bW,bH);
-    gButton2->setPos(bX+3.0, bY);
+    sButton *gButton2 = new sButton(bW,bH);
+    gButton2->setPos(bX+2.0, bY);
     gButton2->setColor({0.2f, 0.3f,0.5f,1.0});
-
+    gButton2->setName("esteban");
     world.add(gButton2);
 
     Button *xButton2 = new Button(bX+3.0, bY, bW, bH);
-    xButton2->AttachEvent("click", suma1, MVP);
+    gButton2->AttachEvent("click", myCall2);
     Reset = 1;
+
+
+    GLfloat bw2 = 1.3f;
+    GLfloat bh2 = 1.0f;
+    sButton *sB = new sButton(bw2, bh2);
+
+    auto f = [&bw2](float x, float y) -> void {
+        Reset = 0;
+        _LOGE("AInputEvent sButton Reset II: %f, %f", x, y);
+    };
+
+    sB->AttachEvent("click", myCall2);//myCall
+    sB->setPos(bX+4.0,bY);
+
+    GLfloat rr = (double)( rand() % 256)/256 ;
+    GLfloat gg = (double)( rand() % 256)/256 ;
+    GLfloat bb = (double)( rand() % 256)/256 ;
+    sB->acc = 1.2 *(rand() % 100)/100;
+    sB->setColor({rr, gg,bb,1.0});
+    sB->setName("Boton 3");
+    world.add(sB);
+
+
+    sButton *sX = new sButton(0.8f, 0.3);
+    sX->setPos(bX+0.0,bY-1.5);
+    sX->setColor({1.0, 0.65,0.32,1.0});
+    sX->setName("Boton 4");
+    sX->AttachEvent("click", myCall2);
+    world.add(sX);
+
+    sButton *sY = new sButton(0.8f, 0.3);
+    sY->setPos(bX+5.0,bY-1.5);
+    sY->setColor({1.0, 0.25,0.0,1.0});
+    sY->setName("Boton 5");
+    sY->AttachEvent("click", myCall2);
+    world.add(sY);
 
 }
 void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
@@ -1010,7 +1106,7 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
         for(int i=0;i<N_RECT;i++){
             _LOGE("AInputEvent RESET x 2 %d", i);
             //GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
-            R[i]->setPosY(-2.0);
+            R[i]->setPosY(-5.0);
         }
         Reset = 1;
     }
@@ -1030,7 +1126,7 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     float left = -0.0f, up = 0.0;
     Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
     // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP        = projection * View * Model ; // Remember, matrix multiplication is the other way around
+    MVP        = projection * View * Model ; // Remember, matrix multiplication is the other way around
 
     srand (time(NULL));
     /* generate secret number between 1 and 10: */
@@ -1046,7 +1142,15 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
 */
     for(int i=0;i<N_RECT;i++){
         GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
-        R[i]->setPosY( R[i]->getPosY()+0.005+DX);
+
+        if(i==4){
+            R[i]->setPosY( R[i]->getPosY()+0.005+DX+mDelta);
+            R[i]->setPosX( R[i]->getPosX()+mDeltaX);
+            mDeltaX = 0.0;
+        }else{
+            R[i]->setPosY( R[i]->getPosY()+0.005+DX);
+        }
+
     }
 
 

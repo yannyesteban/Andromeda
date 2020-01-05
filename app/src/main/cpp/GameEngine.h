@@ -7,9 +7,17 @@
 
 
 class GameEngine {
+public:
+    virtual void play();
+    virtual void pause();
+    virtual void stop();
 
-    void render();
 
+    virtual void render();
+
+private:
+    int mPlayers[100];
+    int nPlayes = 0;
 };
 
 

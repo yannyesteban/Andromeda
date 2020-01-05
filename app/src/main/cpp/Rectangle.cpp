@@ -22,6 +22,8 @@ void Rectangle::init() {
 }
 
 void Rectangle::Render(glm::mat4 MVP) {
+
+    this->MVP = MVP;
     glUseProgram(sh->programObject);
 
     glUniformMatrix4fv(mMVPId, 1, GL_FALSE, &MVP[0][0]);
@@ -83,7 +85,7 @@ void Rectangle::setPosX(GLfloat x) {
     posX = x;
 }
 void Rectangle::setPosY(GLfloat y) {
-    posY = y*acc;
+    posY = y;
 }
 void Rectangle::setPosZ(GLfloat z) {
     posZ = z;
@@ -105,4 +107,12 @@ void Rectangle::Reset() {
     posZ = 0.0f;
 
 
+}
+
+void Rectangle::setName(char *name) {
+    mName = name;
+}
+
+const char *Rectangle::getName() {
+    return mName;
 }

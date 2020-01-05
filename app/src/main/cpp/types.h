@@ -14,6 +14,7 @@
 #include <glm/glm.hpp>
 #include <NDKHelper.h>
 #include "EventEngine.h"
+//#include "iEvent.h"
 
 struct GMv6{
     glm::vec3 v;
@@ -54,6 +55,7 @@ struct engine {
     ndk_helper::TapCamera tap_camera_;
 
     EventEngine Event;
+    //iEvent Event2;
 
 };
 

@@ -184,6 +184,10 @@ add_library( # Sets the name of the library.
         EventEngine.cpp
         GameEngine.cpp
         World.cpp
+        iObject.cpp
+        iWorld.cpp
+        iEvent.cpp
+        iButton.cpp
 
         )
 
