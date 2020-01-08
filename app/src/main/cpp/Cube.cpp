@@ -1,16 +1,12 @@
 //
-// Created by Yanny on 23/12/2019.
+// Created by yanny on 6/1/2020.
 //
 
-#include <glm/gtc/matrix_transform.hpp>
-#include "Rectangle.h"
-#include "Log.h"
-
-Rectangle::Rectangle() {
+#include "Cube.h"
 
 
-}
-void Rectangle::init() {
+
+void Cube::init() {
 
     sh =  new ShadersManager();
     sh->setVS("shaders/solid_vs.glsl");
@@ -21,7 +17,7 @@ void Rectangle::init() {
 
 }
 
-void Rectangle::Render(glm::mat4 MVP) {
+void Cube::Render(glm::mat4 MVP) {
 
     this->MVP = MVP;
     glUseProgram(sh->programObject);
@@ -32,16 +28,41 @@ void Rectangle::Render(glm::mat4 MVP) {
     glUniform4f(textColor, color.x, color.y, color.z, color.w);
 
     GLfloat vVertices[] = {
-            posX,       posY,         posZ,
-            posX+width, posY,         posZ,
-            posX+width, posY+height,  posZ,
-            posX,       posY+height,  posZ,
+            -1.0,  -1.0,  1.0,
+             1.0,  -1.0,  1.0,
+            -1.0,   1.0,  1.0,
+             1.0,   1.0,  1.0,
+
+            -1.0,  -1.0, -1.0,
+             1.0,  -1.0, -1.0,
+            -1.0,   1.0, -1.0,
+             1.0,   1.0, -1.0,
     };
 
-    GLushort  indices[] = {0,1,2,0,2,3};
+    GLushort  indices[] = {
+            // front
+            0, 1, 2,
+            2, 1, 3,
+            // right
+            1, 5, 6,
+            6, 2, 1,
+            // back
+            7, 6, 5,
+            5, 4, 7,
+            // left
+            4, 0, 3,
+            3, 7, 4,
+            // bottom
+            4, 5, 1,
+            1, 0, 4,
+            // top
+            3, 2, 6,
+            6, 7, 3
 
-    GLint numIndices = 6;
-    GLint numVertices = 4;
+    };
+
+    GLint numIndices = 36;
+    GLint numVertices = 8;
     GLint vtxStride = (3)*sizeof(GLfloat);
     GLuint offset = 0;
 
@@ -66,58 +87,52 @@ void Rectangle::Render(glm::mat4 MVP) {
 
 }
 
-void Rectangle::end() {
+void Cube::end() {
     glDeleteBuffers(2, vboIds);
 
 }
 
-void Rectangle::setPos(GLfloat x, GLfloat y) {
+void Cube::setPos(GLfloat x, GLfloat y) {
     posX = x;
     posY = y;
 
 }
 
-void Rectangle::setColor(glm::vec4 pColor) {
-    color =pColor;
+void Cube::setColor(glm::vec4 pColor) {
+    color = pColor;
 }
 
-void Rectangle::setPosX(GLfloat x) {
+void Cube::setPosX(GLfloat x) {
     posX = x;
 }
-void Rectangle::setPosY(GLfloat y) {
+void Cube::setPosY(GLfloat y) {
     posY = y;
 }
-void Rectangle::setPosZ(GLfloat z) {
+void Cube::setPosZ(GLfloat z) {
     posZ = z;
 }
 
-GLfloat Rectangle::getPosX() {
+GLfloat Cube::getPosX() {
     return posX;
 }
-GLfloat Rectangle::getPosY() {
+GLfloat Cube::getPosY() {
     return posY;
 }
-GLfloat Rectangle::getPosZ() {
+GLfloat Cube::getPosZ() {
     return posZ ;
 }
 
-void Rectangle::Reset() {
-    posX = 0.0f;
-    posY = -2.0f;
-    posZ = 0.0f;
 
 
-}
-
-void Rectangle::setName(const char *name) {
+void Cube::setName(char *name) {
     mName = name;
 }
 
-const char *Rectangle::getName() {
+const char *Cube::getName() {
     return mName;
 }
 
-void Rectangle::setPos(GLfloat x, GLfloat y, GLfloat z) {
+void Cube::setPos(GLfloat x, GLfloat y, GLfloat z) {
     posX = x;
     posY = y;
     posZ = z;

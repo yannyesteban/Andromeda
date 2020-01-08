@@ -15,15 +15,15 @@
 #include <gl3stub.h>
 #include "Texture2D.h"
 #include "ShadersManager.h"
+#include "World.h"
 
 
-
-class Sprite {
+class Sprite: public  basicObj {
 public:
 
     const char * source = "";
 
-    GLfloat width = 4.0f;
+    GLfloat width = 1.0f;
     GLfloat height = 1.0f;
 
     GLfloat posX = 0.0f;
@@ -40,6 +40,7 @@ public:
     void init();
     void end();
     void setPos(GLfloat x, GLfloat y);
+    void setPos(GLfloat x, GLfloat y, GLfloat z);
 
     void setPosX(GLfloat x);
     void setPosY(GLfloat y);

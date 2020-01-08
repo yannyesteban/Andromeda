@@ -18,10 +18,23 @@ public:
     virtual void init() = 0;
     virtual void Render(glm::mat4 MVP) = 0;
     virtual void end() = 0;
-    virtual void Reset() = 0;
+    virtual void Reset(){};
+
+    virtual void setPos(GLfloat x, GLfloat y)=0;
+    virtual void setPos(GLfloat x, GLfloat y, GLfloat z)=0;
+
+
+    virtual void setPosX(GLfloat x)=0;
+    virtual void setPosY(GLfloat y)=0;
+    virtual void setPosZ(GLfloat z)=0;
+
+    virtual GLfloat getPosX()=0;
+    virtual GLfloat getPosY()=0;
+    virtual GLfloat getPosZ()=0;
+
     virtual void PosIni(GLfloat x, GLfloat y, GLfloat z);
-    GLfloat width = 0.5f;
-    GLfloat height = 1.0f;
+
+
 
     GLfloat posX = 0.0f;
     GLfloat posY = 0.0f;
@@ -30,6 +43,7 @@ public:
     GLfloat iniX = 0.0f;
     GLfloat iniY = 0.0f;
     GLfloat iniZ = 0.0f;
+    GLint Id = 0;
 
 };
 

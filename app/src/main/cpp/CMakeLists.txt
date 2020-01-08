@@ -174,6 +174,7 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         main.cpp
+        Application.cpp
         Asset.cpp
         ShadersManager.cpp
         cc.cpp
@@ -188,6 +189,10 @@ add_library( # Sets the name of the library.
         iWorld.cpp
         iEvent.cpp
         iButton.cpp
+        Cube.cpp
+        Race.cpp
+        Horse.cpp
+        Rinconada.cpp
 
         )
 

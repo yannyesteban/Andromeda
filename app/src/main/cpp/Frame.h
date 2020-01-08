@@ -6,12 +6,12 @@
 ////////////////////
 //https://arm-software.github.io/opengl-es-sdk-for-android/introduction_to_shaders.html
 //
-
+#ifndef ANDROMEDA_FRAME_H
+#define ANDROMEDA_FRAME_H
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#ifndef ANDROMEDA_FRAME_H
-#define ANDROMEDA_FRAME_H
+
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -27,6 +27,7 @@
 #include <fcntl.h>
 #include "Rectangle.h"
 #include "iEvent.h"
+#include "Cube.h"
 //#include "Sprite.h"
 
 #define VERTEX_POS_INDX 0
@@ -112,16 +113,57 @@ void myCall2(ElemEvent event){
 
 }
 
+
+void myCallHorse(ElemEvent event){
+    sButton *s = (sButton*)event.context;
+
+    switch(event.index-5){
+        case 0:
+            Reset = 0;
+            mDelta = 0.0;
+            mDeltaX = 0.0;
+            break;
+        case 1:
+            mDelta = mDelta + 0.001f;
+            break;
+        case 2:
+            mDelta = mDelta - 0.001f;
+            if(mDelta < 0.0){
+                mDelta = 0.0;
+            }
+            break;
+        case 3:
+            mDeltaX = mDeltaX - 0.1f;
+            if(mDeltaX < 0.0){
+                //mDelta = 0.0;
+            }
+            break;
+        case 4:
+            mDeltaX = mDeltaX + 0.1f;
+            if(mDeltaX < 0.0){
+                // mDeltaX = 0.0;
+            }
+            break;
+
+    }
+    //Reset = 0;
+
+
+    _LOGE("AInputEvent sButton Reset III: %f, %f, width:%f", event.x, event.y,s->width);
+    _LOGE("AInputEvent sButton Reset III: name %s", s->getName());
+
+}
 ShadersManager *m;
 ShadersManager *m2;
 Rectangle *Rt;
 Rectangle *Rt2;
 Rectangle *Rt3;
+Cube *CC;
 Sprite *S;
 SpriteText *Text;
 
 #define N_RECT 10
-Rectangle *R[N_RECT];
+sButton *R[N_RECT];
 
 GLint text[5];
 std::list<GLAttrib> lAttrib;
@@ -209,9 +251,6 @@ void RenderText(ShadersManager *s, std::string text, GLfloat x, GLfloat y, GLflo
     glDisableVertexAttribArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-
-
 void Init0 (android_app* app){
 
     Asset::setAssetManager(app->activity->assetManager);
@@ -322,7 +361,6 @@ void Frame1(android_app* app, EGLDisplay display, EGLSurface surface){
 
     glDeleteBuffers(2, vboIds);
 }
-
 void Init2 (android_app* app){
     Asset::setAssetManager(app->activity->assetManager);
     m =  new ShadersManager();
@@ -553,8 +591,6 @@ void Frame2(android_app* app, EGLDisplay display, EGLSurface surface){
     eglSwapBuffers(display, surface);
     glDeleteBuffers(2, vboIds);
 }
-
-
 void Init3 (android_app* app){
     Asset::setAssetManager(app->activity->assetManager);
 
@@ -593,7 +629,7 @@ void Init3 (android_app* app){
 
 
     for(int i=0;i<N_RECT;i++){
-        R[i] = new Rectangle(w, h);
+        R[i] = new sButton(w, h);
 
         R[i]->setPos(xx*i-1.5,posY);
 
@@ -906,7 +942,6 @@ void Frame3(android_app* app, EGLDisplay display, EGLSurface surface){
 
 }
 
-
 void Init (android_app* app){
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     int err = errno;
@@ -926,6 +961,72 @@ void Init (android_app* app){
     }
 
 
+
+    GLfloat bX = -3.0f;
+    GLfloat bY = 5.0f;
+    GLfloat bW = 1.0f;
+    GLfloat bH = 1.0f;
+
+
+    CC = new Cube(bW,bH,1.0);
+    CC->setColor({0.2f, 0.2f,0.2f,1.0});
+    world.add(CC);
+    sButton *gButton = new sButton(bW,bH);
+    gButton->setPos(bX, bY);
+    gButton->setName("yanny");
+    gButton->setColor({0.2f, 0.6f,0.4f,1.0});
+
+    world.add(gButton);
+
+    gButton->AttachEvent("click", myCall2);
+
+    sButton *gButton2 = new sButton(bW,bH);
+    gButton2->setPos(bX+2.0, bY);
+    gButton2->setColor({0.2f, 0.3f,0.5f,1.0});
+    gButton2->setName("esteban");
+    world.add(gButton2);
+
+    Button *xButton2 = new Button(bX+3.0, bY, bW, bH);
+    gButton2->AttachEvent("click", myCall2);
+    Reset = 1;
+
+
+    GLfloat bw2 = 1.3f;
+    GLfloat bh2 = 1.0f;
+    sButton *sB = new sButton(bw2, bh2);
+
+    auto f = [&bw2](float x, float y) -> void {
+        Reset = 0;
+        _LOGE("AInputEvent sButton Reset II: %f, %f", x, y);
+    };
+
+    sB->AttachEvent("click", myCall2);//myCall
+    sB->setPos(bX+4.0,bY);
+
+    GLfloat rr = (double)( rand() % 256)/256 ;
+    GLfloat gg = (double)( rand() % 256)/256 ;
+    GLfloat bb = (double)( rand() % 256)/256 ;
+    sB->acc = 1.2 *(rand() % 100)/100;
+    sB->setColor({rr, gg,bb,1.0});
+    sB->setName("Boton 3");
+    world.add(sB);
+
+
+    sButton *sX = new sButton(0.8f, 0.3);
+    sX->setPos(bX+0.0,bY-1.5);
+    sX->setColor({1.0, 0.65,0.32,1.0});
+    sX->setName("Boton 4");
+    sX->AttachEvent("click", myCall2);
+    world.add(sX);
+
+    sButton *sY = new sButton(0.8f, 0.3);
+    sY->setPos(bX+5.0,bY-1.5);
+    sY->setColor({1.0, 0.25,0.0,1.0});
+    sY->setName("Boton 5");
+    sY->AttachEvent("click", myCall2);
+    world.add(sY);
+
+
     GLfloat w = 0.3f;
     GLfloat h = 0.7f;
     /*
@@ -939,14 +1040,20 @@ void Init (android_app* app){
     srand (time(NULL));
     /* generate secret number between 1 and 10: */
     for(int i=0;i<N_RECT;i++){
-        R[i] = new Rectangle(w, h);
+        R[i] = new sButton(w, h);
         R[i]->setPos(xx*i-1.5,posY);
 
+        char buf[16];
         GLfloat rr = (double)( rand() % 256)/256 ;
         GLfloat gg = (double)( rand() % 256)/256 ;
         GLfloat bb = (double)( rand() % 256)/256 ;
+        sprintf(buf,"name_%d",i);
+        R[i]->setName(buf);
+
         R[i]->acc = 1.2 *(rand() % 100)/100;
+
         R[i]->setColor({rr, gg,bb,1.0});
+        R[i]->AttachEvent("click", myCallHorse);
         world.add(R[i]);
     }
 /*
@@ -994,95 +1101,10 @@ void Init (android_app* app){
     Text = new SpriteText();
     Text->init();
 
-//fy = 1;
-
-    glm::mat4 projection;
-    projection = glm::ortho(-4.0f, 4.0f, -4.0f, 4.0f, -4.0f, 4.0f);
-    // Camera matrix
-    glm::mat4 View       = glm::lookAt(
-            glm::vec3(0,0,5), // Camera is at (4,3,-3), in World Space
-            glm::vec3(0,0,0), // and looks at the origin
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-    // Model matrix : an identity matrix (model will be at the origin)
-    glm::mat4 Model      = glm::mat4(1.0f);
-    Model = glm::scale(Model,glm::vec3(1.0f,1.0f*fy,1.0f));
-    //Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
-    float left = 0.0f, up = 0.0;
-    Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
-    // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP        = projection * View * Model ; // Remember, matrix multiplication is the other way around
-
-
-    glm::vec4 V4 = glm::vec4(-4.0f,-4.0f,0.0f,1.0f);
-
-    V4 = MVP * V4;
-
-
-    _LOGE("AInputEvent V4 %f, %f, %f", V4.x, V4.y, V4.a);
 
 
 
-    GLfloat bX = -3.0f;
-    GLfloat bY = 5.0f;
-    GLfloat bW = 1.0f;
-    GLfloat bH = 1.0f;
 
-    sButton *gButton = new sButton(bW,bH);
-    gButton->setPos(bX, bY);
-    gButton->setName("yanny");
-    gButton->setColor({0.2f, 0.6f,0.4f,1.0});
-
-    world.add(gButton);
-    //Button *xButton = new Button(bX, bY, bW, bH);
-    gButton->AttachEvent("click", myCall2);
-/*
-*/
-    sButton *gButton2 = new sButton(bW,bH);
-    gButton2->setPos(bX+2.0, bY);
-    gButton2->setColor({0.2f, 0.3f,0.5f,1.0});
-    gButton2->setName("esteban");
-    world.add(gButton2);
-
-    Button *xButton2 = new Button(bX+3.0, bY, bW, bH);
-    gButton2->AttachEvent("click", myCall2);
-    Reset = 1;
-
-
-    GLfloat bw2 = 1.3f;
-    GLfloat bh2 = 1.0f;
-    sButton *sB = new sButton(bw2, bh2);
-
-    auto f = [&bw2](float x, float y) -> void {
-        Reset = 0;
-        _LOGE("AInputEvent sButton Reset II: %f, %f", x, y);
-    };
-
-    sB->AttachEvent("click", myCall2);//myCall
-    sB->setPos(bX+4.0,bY);
-
-    GLfloat rr = (double)( rand() % 256)/256 ;
-    GLfloat gg = (double)( rand() % 256)/256 ;
-    GLfloat bb = (double)( rand() % 256)/256 ;
-    sB->acc = 1.2 *(rand() % 100)/100;
-    sB->setColor({rr, gg,bb,1.0});
-    sB->setName("Boton 3");
-    world.add(sB);
-
-
-    sButton *sX = new sButton(0.8f, 0.3);
-    sX->setPos(bX+0.0,bY-1.5);
-    sX->setColor({1.0, 0.65,0.32,1.0});
-    sX->setName("Boton 4");
-    sX->AttachEvent("click", myCall2);
-    world.add(sX);
-
-    sButton *sY = new sButton(0.8f, 0.3);
-    sY->setPos(bX+5.0,bY-1.5);
-    sY->setColor({1.0, 0.25,0.0,1.0});
-    sY->setName("Boton 5");
-    sY->AttachEvent("click", myCall2);
-    world.add(sY);
 
 }
 void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
@@ -1140,6 +1162,8 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     Rt2->setPosY(0.005+DX2);
     Rt3->setPosY(0.005+DX3);
 */
+
+    //CC->Render(MVP);
     for(int i=0;i<N_RECT;i++){
         GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;
 
@@ -1224,5 +1248,25 @@ void Frame(android_app* app, EGLDisplay display, EGLSurface surface){
     }
     world.End();
 
+}
+
+
+void Main (android_app* app) {
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    int err = errno;
+    _LOGE("HOLA MUNDO SOCKECT 3 %d error %d", sockfd, errno);
+
+
+    Asset::setAssetManager(app->activity->assetManager);
+
+
+    struct engine *engine = (struct engine *) app->userData;
+    aspect = (float) engine->width / (float) engine->height;
+
+    if (aspect > 1) {
+        fx = aspect;
+    } else {
+        fy = aspect;
+    }
 }
 #endif //ANDROMEDA_FRAME_H

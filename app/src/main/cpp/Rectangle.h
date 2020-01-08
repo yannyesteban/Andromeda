@@ -18,6 +18,7 @@ class Rectangle: public  basicObj {
 public:
     GLfloat width = 0.5f;
     GLfloat height = 1.0f;
+    GLfloat depth = 0.0f;
 
     //GLfloat posX = 0.0f;
     //GLfloat posY = 0.0f;
@@ -35,6 +36,7 @@ public:
     void init();
     void end();
     void setPos(GLfloat x, GLfloat y);
+    void setPos(GLfloat x, GLfloat y, GLfloat z);
 
     void setPosX(GLfloat x);
     void setPosY(GLfloat y);
@@ -47,7 +49,7 @@ public:
     void setColor(glm::vec4 pColor);
     void Render(glm::mat4 MVP);
     void Reset();
-    void setName(char * name);
+    void setName(const char * name);
     const char * getName();
 private:
     GLuint vboIds[2];

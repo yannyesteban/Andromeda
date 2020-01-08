@@ -38,6 +38,8 @@ This allows structs that refer to each other:
 #include "SpriteText.h"
 #include "Frame.h"
 #include "EventEngine.h"
+#include "Application.h"
+#include "Rinconada.h"
 #include <NDKHelper.h>
 
 #include <sys/socket.h>
@@ -305,7 +307,7 @@ int initDisplay() {
     //glViewport(100, 100, width, height);
     glViewport(0, 0, width, height);
     //glViewport(100, 100, 200, 200);
-    Init(app);
+    Main(app);
     return 0;
 }
 int closeDisplay() {
@@ -366,6 +368,11 @@ void draw_frame() {
 
 void android_main(struct android_app* app1) {
 
+    Rinconada V = Rinconada(app1);
+    V.iniApp();
+    //V.init();
+
+    return;
 
 
 

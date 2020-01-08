@@ -54,6 +54,7 @@ void EventEngine::process(const AInputEvent* event) {
 
 
     for(int i =0;i<nButtons;i++){
+        _LOGE("AInputEvent sButton Reset II: %f, %f", x, y);
         iButton *B = (iButton*)buttons[i];
         if(B->isIn(x, y)){
             ElemEvent ev;

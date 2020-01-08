@@ -102,3 +102,9 @@ Sprite::Sprite() {
 
 }
 
+void Sprite::setPos(GLfloat x, GLfloat y, GLfloat z) {
+    posX = x;
+    posY = y;
+    posZ = z;
+}
+
