@@ -17,12 +17,20 @@ public:
     void (*callEvent)(ElemEvent Event);
     virtual void AttachEvent(const char * name, void (*call)(float x, float y));
     virtual void AttachEvent(const char * name, void (*call)(ElemEvent Event));
-    virtual void bind(iButton *_context)=0;
-    virtual iButton * getContext()=0;
+
+    virtual void bind(void *_context)=0;
+    virtual void * getContext()=0;
+
+    //virtual void setTarget(iButton * target)=0;
+    //virtual iButton * getTarget()=0;
+
     //glm::mat4 MVP;
     static EventEngine * Event;
 
-   // iButton * context;
+    // iButton * context;
+private:
+    iButton * target;
+    //void * context;
 
 };
 

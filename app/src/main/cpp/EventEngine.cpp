@@ -62,6 +62,8 @@ void EventEngine::process(const AInputEvent* event) {
             ev.y= y;
             ev.index = i;
             ev.context = B->getContext();
+            ev.target = B;
+            //ev.dataUser = buttons[i]->_ctx;
             B->callEvent(ev);
             //B->call(x, y);
         }

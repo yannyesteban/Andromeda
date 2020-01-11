@@ -193,7 +193,13 @@ add_library( # Sets the name of the library.
         Race.cpp
         Horse.cpp
         Rinconada.cpp
-
+        Scene.cpp
+        Actor.cpp
+        Object3D.cpp
+        Rectangle2D.cpp
+        Button2D.cpp
+        Sprite2D.cpp
+        Text2D.cpp
         )
 
 

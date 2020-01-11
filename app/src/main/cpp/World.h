@@ -23,7 +23,6 @@ public:
     virtual void setPos(GLfloat x, GLfloat y)=0;
     virtual void setPos(GLfloat x, GLfloat y, GLfloat z)=0;
 
-
     virtual void setPosX(GLfloat x)=0;
     virtual void setPosY(GLfloat y)=0;
     virtual void setPosZ(GLfloat z)=0;
@@ -33,8 +32,6 @@ public:
     virtual GLfloat getPosZ()=0;
 
     virtual void PosIni(GLfloat x, GLfloat y, GLfloat z);
-
-
 
     GLfloat posX = 0.0f;
     GLfloat posY = 0.0f;

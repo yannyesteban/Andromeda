@@ -4,6 +4,9 @@
 
 #include "Rinconada.h"
 #include "iEvent.h"
+#include "Sprite2D.h"
+#include "Button2D.h"
+#include "Race.h"
 
 void myCall3(ElemEvent event){
     sButton *s = (sButton*)event.context;
@@ -23,15 +26,22 @@ Rinconada::Rinconada(struct android_app *app) : Application(app) {
 void Rinconada::init() {
     //Application::init();
 
+    Race * R = new Race();
+    R->setCompetitor(7);
 
+    scene = R;
 
+    R->init();
 
     _LOGE("xxxxx111");
-    Sprite *S = new Sprite("png/Rinconada.png", 4.0f, 3.0f);
-    S->setPos(-2.0, -1.0);
-    //S = new Sprite("png/barcelona.png");
 
-    sButton *b1 = new sButton(1.0, 1.0);
+
+   //Sprite2D *S2 = new Sprite2D("png/horse2.png", 0.6f, 1.2f);
+    //S->setPos(-3.0, -6.0);
+
+    //S = new Sprite("png/barcelona.png");
+/*
+    Button2D *b1 = new Button2D(1.0, 1.0);
     b1->setColor({1.0,1.0,0.0,1.0});
     b1->setPos(-0.5,-3);
     b1->setName("start");
@@ -40,16 +50,16 @@ void Rinconada::init() {
         sButton *s = (sButton*)event.context;
         _LOGE("AInputEvent sButton Reset II: %f, %f", event.x, event.y);
     });
-
+*/
     //S->init();
-    world.add(S);
-    world.add(b1);
+    //scene.add(S);
+    //scene.add(S2);
+    //scene.add(b1);
 }
 
 int Rinconada::play() {
 
     _LOGE("xxxxx");
-
 
 
     glClearColor(1.0f,0.354f,0.2f, 1);
@@ -65,12 +75,12 @@ int Rinconada::play() {
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
     getMVP();
-    world.Render(MVP);
+    scene->render(MVP);
 
     //S->Render(MVP);
     swap();
     //S->end();
-    world.End();
+    scene->end();
     return 1;
     //return Application::play();
 }
@@ -109,3 +119,5 @@ void Rinconada::iniApp() {
 
     mainLoop();
 }
+
+

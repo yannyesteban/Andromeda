@@ -30,9 +30,11 @@ public:
     float height;
     int (*call)(int a, int b);
     int index = 0;
-    iButton *context;
 
     glm::mat4 MVP;
+
+    iButton * target;
+    void * context = nullptr;
 };
 
 class EventEngine {

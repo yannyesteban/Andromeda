@@ -41,7 +41,7 @@ sButton::sButton(GLfloat w, GLfloat h):Rectangle(w, h){
     _context = this;
 };
 
-void sButton::bind(iButton *context) {
+void sButton::bind(void * context) {
    _context = context;
 }
 
@@ -49,7 +49,7 @@ sButton::~sButton() {
 
 }
 
-iButton *sButton::getContext() {
+void *sButton::getContext() {
     return _context;
 }
 

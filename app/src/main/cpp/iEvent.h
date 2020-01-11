@@ -16,11 +16,11 @@ public:
     sButton(GLfloat w, GLfloat h);
     bool isIn(float a, float b);
 
-    void bind(iButton * _context);
-    iButton * getContext();
+    void bind(void * _context);
+    void * getContext();
 
 private:
-    iButton *_context;
+    void *_context;
 };
 
 

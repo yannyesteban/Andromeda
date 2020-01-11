@@ -15,30 +15,13 @@ iButton::~iButton() {
 }
 
 void iButton::AttachEvent(const char *name, void (*callFunction)(float, float)) {
-
     call = callFunction;
-    //iButton *X = new iButton();
-   // Event->is(X);
-    //iButton *x = new iButton(2.0,2.0);
-
-   Event->AttachEvent(this, name);
+    Event->AttachEvent(this, name);
 
 }
 
 void iButton::AttachEvent(const char *name, void (*callFunction)(ElemEvent)) {
     callEvent = callFunction;
-    //iButton *X = new iButton();
-    // Event->is(X);
-    //iButton *x = new iButton(2.0,2.0);
-
     Event->AttachEvent(this, name);
 }
-
-
-/*
-void iButton::isIn(float a, float b) {
-
-}
-*/
-
 

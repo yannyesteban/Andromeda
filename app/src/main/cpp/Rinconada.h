@@ -14,6 +14,7 @@
 #include "Application.h"
 #include "World.h"
 #include "Sprite.h"
+#include "Scene.h"
 
 class Rinconada: public Application {
 public:
@@ -27,8 +28,12 @@ public:
     void terminate();
 
     void getMVP();
+
+
+
 private:
     World world;
+    Scene * scene;
     glm::mat4 MVP;
     GLfloat screenRel = 1.0f;
     Sprite *S;
