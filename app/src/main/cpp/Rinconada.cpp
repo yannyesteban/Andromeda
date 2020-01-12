@@ -19,13 +19,18 @@ void myCall3(ElemEvent event){
 
 }
 
-Rinconada::Rinconada(struct android_app *app) : Application(app) {
+Rinconada::Rinconada(struct android_app *app) : Application(app),SSystem(app) {
     _LOGE("xxxxx000");
 }
 
 void Rinconada::init() {
     //Application::init();
 
+    if(SSystem.start()){
+        _LOGE("SSystem OK");
+    }
+    Asset mBGM("sounds/Bette_Davis_Eyes.mp3");
+    SSystem.playBGM(mBGM);
     Race * R = new Race();
     R->setCompetitor(7);
 

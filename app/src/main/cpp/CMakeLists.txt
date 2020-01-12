@@ -200,6 +200,7 @@ add_library( # Sets the name of the library.
         Button2D.cpp
         Sprite2D.cpp
         Text2D.cpp
+        SoundSystem.cpp
         )
 
 
@@ -232,6 +233,7 @@ target_link_libraries( # Specifies the target library.
         freetype
         EGL
         GLESv2
+        OpenSLES
         libpng
 
         z

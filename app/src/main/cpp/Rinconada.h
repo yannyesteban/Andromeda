@@ -15,6 +15,7 @@
 #include "World.h"
 #include "Sprite.h"
 #include "Scene.h"
+#include "SoundSystem.h"
 
 class Rinconada: public Application {
 public:
@@ -37,6 +38,7 @@ private:
     glm::mat4 MVP;
     GLfloat screenRel = 1.0f;
     Sprite *S;
+    SoundSystem SSystem;
 protected:
 
 };
