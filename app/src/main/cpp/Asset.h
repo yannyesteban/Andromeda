@@ -22,14 +22,20 @@ public:
 
     void close();
 
+    void load();
+    void unLoad();
+    uint8_t* getBuffer();
+
+
     int read(void* pBuffer, size_t pCount);
     int read(void* pBuffer);
     off_t getLength();
-
+    const char* getPath();
     AssetDescriptor descriptor();
 
     static void setAssetManager(AAssetManager* pAssetManager);
     static void setDataPath(const char * pInternalDataPath,  const char * pExternalDataPath);
+
 
     bool operator==(const Asset& pOther);
     static AAssetManager * _assetManager;
@@ -38,6 +44,8 @@ private:
     AAsset* _asset;
     const char* _path;
 
+    uint8_t* buffer;
+    off_t length;
 
     static const char * _externalDataPath;
     static const char * _internalDataPath;

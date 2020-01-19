@@ -3,6 +3,7 @@
 //
 
 #include "SoundSystem.h"
+#include "Log.h"
 
 
 SoundSystem::SoundSystem(android_app *pApplication) :
@@ -35,16 +36,16 @@ int32_t SoundSystem::start() {
 
     result = (*mEngine)->CreateOutputMix(mEngine, &mOutputMixObj, outputMixIIDCount, outputMixIIDs, outputMixReqs);
     result = (*mOutputMixObj)->Realize(mOutputMixObj, SL_BOOLEAN_FALSE);
-/*
+
     //Log::info("Starting sound player.");
     for (int32_t i= 0; i < QUEUE_COUNT; ++i) {
         if (mSoundQueues[i].initialize(mEngine, mOutputMixObj) != 1) goto ERROR;
     }
     for (int32_t i = 0; i < mSoundCount; ++i) {
-        if (mSounds[i]->load() != 1) goto ERROR;
+        mSounds[i]->load();// != 1) goto ERROR;
     }
 
-    */
+
     return 1;
 
     ERROR:
@@ -57,11 +58,11 @@ void SoundSystem::stop() {
     //Log::info("Stopping SoundManager.");
 
     stopBGM();
-/*
+
     for (int32_t i= 0; i < QUEUE_COUNT; ++i) {
         mSoundQueues[i].finalize();
     }
-*/
+
     if (mOutputMixObj != NULL) {
         (*mOutputMixObj)->Destroy(mOutputMixObj);
         mOutputMixObj = NULL;
@@ -70,12 +71,12 @@ void SoundSystem::stop() {
         (*mEngineObj)->Destroy(mEngineObj);
         mEngineObj = NULL; mEngine = NULL;
     }
-/*
+
     for (int32_t i = 0; i < mSoundCount; ++i) {
-        mSounds[i]->unload();
+        mSounds[i]->unLoad();
     }
 
-    */
+
 }
 
 int32_t SoundSystem::playBGM(Asset &pResource) {
@@ -91,13 +92,16 @@ int32_t SoundSystem::playBGM(Asset &pResource) {
     dataLocatorIn.fd = descriptor.descriptor;
     dataLocatorIn.offset = descriptor.start;
     dataLocatorIn.length = descriptor.length;
+
     SLDataFormat_MIME dataFormat;
     dataFormat.formatType = SL_DATAFORMAT_MIME;
     dataFormat.mimeType = NULL;
     dataFormat.containerType = SL_CONTAINERTYPE_UNSPECIFIED;
+
     SLDataSource dataSource;
     dataSource.pLocator = &dataLocatorIn;
     dataSource.pFormat = &dataFormat;
+
     SLDataLocator_OutputMix dataLocatorOut;
     dataLocatorOut.locatorType = SL_DATALOCATOR_OUTPUTMIX;
     dataLocatorOut.outputMix = mOutputMixObj;
@@ -159,11 +163,32 @@ void SoundSystem::stopBGM() {
 }
 
 SoundSystem::~SoundSystem() {
-    /*
-    Log::info("Destroying SoundManager.");
+
+    _LOGE("Destroying SoundManager.");
+
     for (int32_t i = 0; i < mSoundCount; ++i) {
         delete mSounds[i];
     }
     mSoundCount = 0;
-     */
+
+}
+
+Asset *SoundSystem::registerSound(Asset *pResource) {
+
+    for (int32_t i = 0; i < mSoundCount; ++i) {
+        //if (strcmp(pResource->getPath(), mSounds[i]->getPath()) == 0) {
+        if(pResource == mSounds[i]){
+            return mSounds[i];
+        }
+    }
+    //return nullptr;
+    //Sound* sound = new Sound(mApplication, &pResource);
+    mSounds[mSoundCount++] = pResource;
+    return pResource;
+}
+
+void SoundSystem::playSound(Asset *pSound) {
+    int32_t currentQueue = ++mCurrentQueue;
+    QueueSound& soundQueue = mSoundQueues[currentQueue % QUEUE_COUNT];
+    soundQueue.playSound(pSound);
 }

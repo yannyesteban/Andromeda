@@ -8,6 +8,8 @@
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 #include "Asset.h"
+#include "QueueSound.h"
+
 class SoundSystem {
 public:
     SoundSystem(android_app* pApplication);
@@ -18,20 +20,23 @@ public:
     int32_t playBGM(Asset& pResource);
     void stopBGM();
 
-    //Sound* registerSound(Resource& pResource);
-    //void playSound(Sound* pSound);
+    Asset * registerSound(Asset * pResource);
+    void playSound(Asset * pSound);
 private:
     android_app* mApplication;
     SLObjectItf mEngineObj;
     SLEngineItf mEngine;
     SLObjectItf mOutputMixObj;
 
-    SLObjectItf mBGMPlayerObj; SLPlayItf mBGMPlayer;
+    SLObjectItf mBGMPlayerObj;
+    SLPlayItf mBGMPlayer;
     SLSeekItf mBGMPlayerSeek;
 
     static const int32_t QUEUE_COUNT = 4;
-    //SoundQueue mSoundQueues[QUEUE_COUNT]; int32_t mCurrentQueue;
-    //Sound* mSounds[32]; int32_t mSoundCount;
+    QueueSound mSoundQueues[QUEUE_COUNT];
+    int32_t mCurrentQueue = 0;
+    Asset* mSounds[32];
+    int32_t mSoundCount = 0;
 
 };
 

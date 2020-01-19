@@ -2,6 +2,9 @@
 // Created by yanny on 6/1/2020.
 //
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 #include "Race.h"
 #include "Button2D.h"
 #include "Text2D.h"
@@ -12,10 +15,13 @@ void Race::init() {
     Text2D * mText = new Text2D();
     mText->setColor({(GLfloat)246/255,(GLfloat)22/255,(GLfloat)195/255,1.0});
     mText->setScale(0.01f);
-    mText->setText("Hola");
-    mText->setPos(-2.0f, -2.0f);
+    mText->setText("Hola Juanchi");
+    mText->setPos(-3.0f, 6.5f);
 
     add(mText);
+
+
+    //return;
 
     info = new InfoRace;
     info->maxDistance = 5.0f;
@@ -68,6 +74,7 @@ void Race::init() {
 
         //Race *r = (Race *)x->que;
         x->stop();
+        //x->SS.playSound();
         _LOGE("AInputEvent sButton Reset II: %f, %f, status %d", event.x, event.y, x->state);
     });
 
@@ -152,7 +159,7 @@ Race *Race::get() {
 void Race::render(glm::mat4 MVP) {
     _LOGE("AInputEvent Position");
     if(state == 1){
-        srand (time(NULL));
+        srand (time(nullptr));
         /* generate secret number between 1 and 10: */
         double Fraction = 500.0;
         GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;

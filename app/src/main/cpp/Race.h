@@ -9,9 +9,11 @@
 #include "Horse.h"
 #include "Object3D.h"
 #include "Scene.h"
+#include "SoundSystem.h"
 
 class Race: public Scene        {
 public:
+    //Race(SoundSystem &s):SS(s){};
     void init();
     void play();
     void stop();
@@ -46,6 +48,7 @@ private:
 
     Horse  * positions[20];
     u_short nPosition = 0;
+   // SoundSystem &SS;
 
 
 };

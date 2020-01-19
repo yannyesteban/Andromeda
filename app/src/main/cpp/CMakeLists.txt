@@ -201,6 +201,7 @@ add_library( # Sets the name of the library.
         Sprite2D.cpp
         Text2D.cpp
         SoundSystem.cpp
+        QueueSound.cpp
         )
 
 

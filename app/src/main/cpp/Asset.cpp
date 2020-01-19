@@ -89,5 +89,29 @@ off_t Asset::getLength() {
     return AAsset_getLength(_asset);
 }
 
+const char *Asset::getPath() {
+    return _path;
+}
+
+void Asset::load() {
+    open();
+    length = getLength();
+    buffer = new uint8_t[length];
+    read(buffer, length);
+    //close();
+
+}
+
+uint8_t *Asset::getBuffer() {
+    return buffer;
+}
+
+void Asset::unLoad() {
+    delete[] buffer;
+    buffer = NULL;
+    length = 0;
+
+}
+
 
 
