@@ -26,16 +26,16 @@ Rinconada::Rinconada(struct android_app *app) : Application(app),SSystem(app) {
 void Rinconada::init() {
     //Application::init();
 
-    Asset *s1 = new Asset("sounds/juanchi.wav");
-    Asset * s2 = new Asset("sounds/s52.mp3");
+    Asset *s1 = new Asset("sounds/airplane.wav");
+    //Asset * s2 = new Asset("sounds/s52.mp3");
     SSystem.registerSound(s1);
-    SSystem.registerSound(s2);
+    //SSystem.registerSound(s2);
 
      if(SSystem.start()){
         _LOGE("SSystem OK");
     }
     Asset mBGM("sounds/piano.mp3");
-    //SSystem.playBGM(mBGM);
+    SSystem.playBGM(mBGM);
     //SSystem.playSound(s1);
     Race * R = new Race();
     R->setCompetitor(7);
@@ -43,7 +43,7 @@ void Rinconada::init() {
     scene = R;
 
     R->init();
-    SSystem.playSound(s2);
+    SSystem.playSound(s1);
     _LOGE("xxxxx111");
 
 

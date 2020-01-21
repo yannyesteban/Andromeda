@@ -33,14 +33,9 @@ int QueueSound::initialize(SLEngineItf pEngine, SLObjectItf pOutputMixObj) {
     dataFormat.channelMask = SL_SPEAKER_FRONT_CENTER;
     dataFormat.endianness = SL_BYTEORDER_LITTLEENDIAN;
 
-    SLDataFormat_MIME dataFormat2;
-    dataFormat2.formatType = SL_DATAFORMAT_MIME;
-    dataFormat2.mimeType = NULL;
-    dataFormat2.containerType = SL_CONTAINERTYPE_UNSPECIFIED;
-
     SLDataSource dataSource;
     dataSource.pLocator = &dataLocatorIn;
-    dataSource.pFormat = &dataFormat2;
+    dataSource.pFormat = &dataFormat;
 
     SLDataLocator_OutputMix dataLocatorOut;
     dataLocatorOut.locatorType = SL_DATALOCATOR_OUTPUTMIX;
@@ -49,6 +44,8 @@ int QueueSound::initialize(SLEngineItf pEngine, SLObjectItf pOutputMixObj) {
     SLDataSink dataSink;
     dataSink.pLocator = &dataLocatorOut;
     dataSink.pFormat = NULL;
+
+
     const SLuint32 soundPlayerIIDCount = 2;
     const SLInterfaceID soundPlayerIIDs[] = { SL_IID_PLAY, SL_IID_BUFFERQUEUE };
     const SLboolean soundPlayerReqs[] = { SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE };
