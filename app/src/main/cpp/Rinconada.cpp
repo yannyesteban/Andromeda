@@ -27,7 +27,7 @@ void Rinconada::init() {
     //Application::init();
 
     Asset *s1 = new Asset("sounds/airplane.wav");
-    //Asset * s2 = new Asset("sounds/s52.mp3");
+    //Asset * s2 = new Asset("sounds/airplane.mp3");
     SSystem.registerSound(s1);
     //SSystem.registerSound(s2);
 
