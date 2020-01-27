@@ -53,6 +53,9 @@ public:
 
     static int ff();
 
+    static GLfloat XAspect;
+    static GLfloat YAspect;
+
     void log(const char * msg);
 
     int32_t screenWidth;

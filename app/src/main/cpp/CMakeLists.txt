@@ -91,21 +91,21 @@ add_library(
 
         # rasterizers (optional; at least one is needed for vector         formats)
 
-${FREETYPE_SRC_PATH}/src/raster/raster.c     # monochrome rasterizer
-${FREETYPE_SRC_PATH}/src/smooth/smooth.c     # anti-aliasing rasterizer
+        ${FREETYPE_SRC_PATH}/src/raster/raster.c     # monochrome rasterizer
+        ${FREETYPE_SRC_PATH}/src/smooth/smooth.c     # anti-aliasing rasterizer
 
-# auxiliary modules (optional)
+        # auxiliary modules (optional)
 
-${FREETYPE_SRC_PATH}/src/autofit/autofit.c   # auto hinting module
-${FREETYPE_SRC_PATH}/src/cache/ftcache.c     # cache sub-system (in beta)
-${FREETYPE_SRC_PATH}/src/gzip/ftgzip.c       # support for compressed fonts (.gz)
-${FREETYPE_SRC_PATH}/src/lzw/ftlzw.c         # support for compressed fonts (.Z)
-${FREETYPE_SRC_PATH}/src/bzip2/ftbzip2.c     # support for compressed fonts (.bz2)
-${FREETYPE_SRC_PATH}/src/gxvalid/gxvalid.c   # TrueTypeGX/AAT table validation
-${FREETYPE_SRC_PATH}/src/otvalid/otvalid.c   # OpenType table validation
-${FREETYPE_SRC_PATH}/src/psaux/psaux.c       # PostScript Type 1 parsing
-${FREETYPE_SRC_PATH}/src/pshinter/pshinter.c # PS hinting module
-${FREETYPE_SRC_PATH}/src/psnames/psnames.c   # PostScript glyph names support
+        ${FREETYPE_SRC_PATH}/src/autofit/autofit.c   # auto hinting module
+        ${FREETYPE_SRC_PATH}/src/cache/ftcache.c     # cache sub-system (in beta)
+        ${FREETYPE_SRC_PATH}/src/gzip/ftgzip.c       # support for compressed fonts (.gz)
+        ${FREETYPE_SRC_PATH}/src/lzw/ftlzw.c         # support for compressed fonts (.Z)
+        ${FREETYPE_SRC_PATH}/src/bzip2/ftbzip2.c     # support for compressed fonts (.bz2)
+        ${FREETYPE_SRC_PATH}/src/gxvalid/gxvalid.c   # TrueTypeGX/AAT table validation
+        ${FREETYPE_SRC_PATH}/src/otvalid/otvalid.c   # OpenType table validation
+        ${FREETYPE_SRC_PATH}/src/psaux/psaux.c       # PostScript Type 1 parsing
+        ${FREETYPE_SRC_PATH}/src/pshinter/pshinter.c # PS hinting module
+        ${FREETYPE_SRC_PATH}/src/psnames/psnames.c   # PostScript glyph names support
 )
 
 
@@ -202,6 +202,7 @@ add_library( # Sets the name of the library.
         Text2D.cpp
         SoundSystem.cpp
         QueueSound.cpp
+        Cube3D.cpp
         )
 
 

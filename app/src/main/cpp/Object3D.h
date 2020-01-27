@@ -46,6 +46,14 @@ public:
     virtual void setName(const char * pName);
     virtual const char * getName();
 
+    virtual void setProjection(glm::mat4);
+    virtual void setView(glm::mat4);
+    virtual void setModel(glm::mat4);
+
+    virtual glm::mat4 getProjection();
+    virtual glm::mat4 getView();
+    virtual glm::mat4 getModel();
+
 
     GLint Id = 0;
 private:
@@ -60,6 +68,12 @@ protected:
     GLfloat posZ = 0.0f;
 
     glm::mat4 MVP;
+
+    glm::mat4 projection;
+    glm::mat4 view;
+    glm::mat4 model;
+
+
 };
 
 

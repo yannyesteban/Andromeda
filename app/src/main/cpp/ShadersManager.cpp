@@ -227,7 +227,7 @@ int ShadersManager::Program(){
     //GLuint MatrixID = glGetUniformLocation(programObject, "projection");
     //_LOGE("yanny MVP x => %d", MatrixID );
 
-    //_LOGE("yanny Bien x");
+    _LOGE("YANNY glBindAttribLocation TOOODO BIEN");
     return true;
 }
 

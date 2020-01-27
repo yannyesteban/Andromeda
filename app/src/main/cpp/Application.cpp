@@ -7,7 +7,8 @@
 #include "EventEngine.h"
 #include "iButton.h"
 
-
+GLfloat Application::XAspect = 1.0;
+GLfloat Application::YAspect = 1.0;
 
 
 //template <class T>
@@ -236,6 +237,8 @@ int Application::displayInit() {
         aspectY = aspect;
     }
 
+    XAspect = aspectX;
+    XAspect = aspectY;
 
     screenWidth = width;
     screenHeight = height;

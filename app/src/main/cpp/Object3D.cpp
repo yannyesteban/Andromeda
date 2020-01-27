@@ -91,3 +91,27 @@ GLfloat Object3D::getDepth() {
 Object3D::~Object3D() {
 
 }
+
+glm::mat4 Object3D::getProjection() {
+    return projection;
+}
+
+glm::mat4 Object3D::getView() {
+    return view;
+}
+
+glm::mat4 Object3D::getModel() {
+    return model;
+}
+
+void Object3D::setProjection(glm::mat4 pProjection) {
+    projection = pProjection;
+}
+
+void Object3D::setView(glm::mat4 pView) {
+    view = pView;
+}
+
+void Object3D::setModel(glm::mat4 pModel) {
+    model = pModel;
+}

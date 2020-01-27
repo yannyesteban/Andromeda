@@ -10,18 +10,23 @@
 #include "Text2D.h"
 
 void Race::init() {
+    Cube3D * cube = new Cube3D();
 
+    cube->setPos(-0.05f, -0.5f, -0.5);
+
+    add(cube);
+
+    return;
 
     Text2D * mText = new Text2D();
     mText->setColor({(GLfloat)246/255,(GLfloat)22/255,(GLfloat)195/255,1.0});
     mText->setScale(0.01f);
-    mText->setText("Hola Juanchi");
+    mText->setText("Andromeda 2020");
     mText->setPos(-3.0f, 6.5f);
 
     add(mText);
 
 
-    //return;
 
     info = new InfoRace;
     info->maxDistance = 5.0f;

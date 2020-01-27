@@ -7,9 +7,10 @@
 
 
 #include "Horse.h"
-#include "Object3D.h"
+//#include "Object3D.h"
 #include "Scene.h"
 #include "SoundSystem.h"
+#include "Cube3D.h"
 
 class Race: public Scene        {
 public:

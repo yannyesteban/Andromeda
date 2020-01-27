@@ -34,8 +34,8 @@ void Rinconada::init() {
      if(SSystem.start()){
         _LOGE("SSystem OK");
     }
-    Asset mBGM("sounds/piano.mp3");
-    SSystem.playBGM(mBGM);
+    //Asset mBGM("sounds/piano.mp3");
+    //SSystem.playBGM(mBGM);
     //SSystem.playSound(s1);
     Race * R = new Race();
     R->setCompetitor(7);
@@ -43,7 +43,7 @@ void Rinconada::init() {
     scene = R;
 
     R->init();
-    SSystem.playSound(s1);
+    //SSystem.playSound(s1);
     _LOGE("xxxxx111");
 
 
@@ -101,7 +101,7 @@ void Rinconada::terminate() {}
 void Rinconada::getMVP() {
     _LOGE("xxxxx2");
     glm::mat4 projection;
-    projection = glm::ortho(-4.0f, 4.0f, -4.0f, 4.0f, -5.0f, 5.0f);
+    projection = glm::ortho(-4.0f, 4.0f, -4.0f, 4.0f, -10.0f, 10.0f);
     // Camera matrix
     glm::mat4 View       = glm::lookAt(
             glm::vec3(0,0,5), // Camera is at (4,3,-3), in World Space
@@ -111,11 +111,23 @@ void Rinconada::getMVP() {
     // Model matrix : an identity matrix (model will be at the origin)
     glm::mat4 Model      = glm::mat4(1.0f);
     Model = glm::scale(Model,glm::vec3(1.0f * aspectX, 1.0f * aspectY, 1.0f));
-    //Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,0.0,1.0));
+
+    static GLfloat dd= 0;
+
+    if(dd>360){
+        dd = 0;
+    }
+    dd=dd+2.0;
+    float radians = dd;
+    Model = glm::rotate(Model,glm::radians(360-dd),glm::vec3(1.0,0.0,0.0));
+    Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,1.0,1.0));
     float left = -0.0f, up = 0.0;
     Model = glm::translate(Model, glm::vec3(0+left,0+up,0));
     // Our ModelViewProjection : multiplication of our 3 matrices
     MVP        = projection * View * Model ; // Remember, matrix multiplication is the other way around
+
+
+
 }
 
 void Rinconada::iniApp() {
