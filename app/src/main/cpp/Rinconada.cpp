@@ -73,9 +73,8 @@ int Rinconada::play() {
     _LOGE("xxxxx");
 
 
-    glClearColor(1.0f,0.354f,0.2f, 1);
-    //glClearColor(0.0f,0.3f,0.4f, 1);
-    glClearColor((GLfloat)178/255,(GLfloat)240/255,(GLfloat)255/255, 1);
+    //glClearColor(1.0f,0.354f,0.2f, 1);
+    glClearColor(0.2f,0.2f,0.2f, 1);    //glClearColor((GLfloat)178/255,(GLfloat)240/255,(GLfloat)255/255, 1);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

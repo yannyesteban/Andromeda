@@ -134,7 +134,7 @@ int Application::mainLoop() {
 }
 
 int Application::play() {
-    glClearColor(1.0f,0.354f,0.2f, 1);
+    glClearColor(1.0f,0.0,0.0f, 1);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
