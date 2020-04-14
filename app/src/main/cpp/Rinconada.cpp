@@ -32,7 +32,7 @@ void Rinconada::init() {
     //SSystem.registerSound(s2);
 
      if(SSystem.start()){
-        _LOGE("SSystem OK");
+        _LOGE("SSystem OK 2020");
     }
     //Asset mBGM("sounds/piano.mp3");
     //SSystem.playBGM(mBGM);
