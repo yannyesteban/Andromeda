@@ -5,16 +5,16 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-
-set( FREETYPE_SRC_PATH ${ANDROID_NDK}/sources/freetype )
-set( lib_src_DIR ${ANDROID_NDK}/sources/libpng )
+set (MY_LIB C:/source/lib)
+set( FREETYPE_SRC_PATH ${MY_LIB}/freetype )
+set( lib_src_DIR ${MY_LIB}/libpng )
 set( lib_ndk_helper_DIR ${ANDROID_NDK}/sources/android/ndk_helper )
 
 include_directories(
         ${lib_src_DIR}/jni
         ${ANDROID_NDK}/sources/android/native_app_glue
         ${ANDROID_NDK}/sources/android/ndk_helper
-        ${ANDROID_NDK}/sources/freetype/include
+        ${FREETYPE_SRC_PATH}/include
 )
 
 add_definitions(-DFT2_BUILD_LIBRARY)
@@ -115,7 +115,7 @@ target_include_directories(
         native_app_glue
         PUBLIC
         ${ANDROID_NDK}/sources/android/native_app_glue
-        ${ANDROID_NDK}/sources/glm
+        ${MY_LIB}/glm
         # ${lib_src_DIR}/jni
 
 )
