@@ -71,19 +71,20 @@ void Rinconada::init() {
 int Rinconada::play() {
 
     _LOGE("xxxxx");
-
-
+    glClearColor(0.2f,0.2f,0.2f, 1);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glClearColor(1.0f,0.354f,0.2f, 1);
-    glClearColor(0.2f,0.2f,0.2f, 1);    //glClearColor((GLfloat)178/255,(GLfloat)240/255,(GLfloat)255/255, 1);
+        //glClearColor((GLfloat)178/255,(GLfloat)240/255,(GLfloat)255/255, 1);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glDisable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
+
+
     getMVP();
     scene->render(MVP);
 
@@ -116,7 +117,7 @@ void Rinconada::getMVP() {
     if(dd>360){
         dd = 0;
     }
-    dd=dd+2.0;
+    //dd=dd+2.0;
     float radians = dd;
     Model = glm::rotate(Model,glm::radians(360-dd),glm::vec3(1.0,0.0,0.0));
     Model = glm::rotate(Model,glm::radians(radians),glm::vec3(0.0,1.0,1.0));

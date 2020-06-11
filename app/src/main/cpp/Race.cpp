@@ -10,13 +10,14 @@
 #include "Text2D.h"
 
 void Race::init() {
+/*
     Cube3D * cube = new Cube3D();
 
     cube->setPos(-0.05f, -0.5f, -0.5);
 
     add(cube);
-
-    return;
+*/
+    //return;
 
     Text2D * mText = new Text2D();
     mText->setColor({(GLfloat)246/255,(GLfloat)22/255,(GLfloat)195/255,1.0});
@@ -24,14 +25,17 @@ void Race::init() {
     mText->setText("Andromeda 2020");
     mText->setPos(-3.0f, 6.5f);
 
+
+
     add(mText);
 
 
 
     info = new InfoRace;
     info->maxDistance = 5.0f;
+
     track = new Sprite2D("png/pista.png", 6.0f, 12.0f);
-    track->setPos(-3.0, -6.0);
+    track->setPos(-3.0, -6.0, -0.1);
 
     add(track);
 
