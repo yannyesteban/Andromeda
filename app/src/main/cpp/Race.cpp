@@ -22,7 +22,7 @@ void Race::init() {
     Text2D * mText = new Text2D();
     mText->setColor({(GLfloat)246/255,(GLfloat)22/255,(GLfloat)195/255,1.0});
     mText->setScale(0.01f);
-    mText->setText("Andromeda. 2020");
+    mText->setText("Jose y Luis");
     mText->setPos(-3.0f, 6.5f);
 
 
