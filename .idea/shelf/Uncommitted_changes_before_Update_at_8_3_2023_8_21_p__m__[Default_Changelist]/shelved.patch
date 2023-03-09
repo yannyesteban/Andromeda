@@ -1,0 +1,144 @@
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"delegatedBuild\" value=\"false\" />\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/.idea/gradle.xml	(date 1677289634505)
+@@ -8,13 +8,13 @@
+         <option name="testRunner" value="GRADLE" />
+         <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
++        <option name="gradleJvm" value="Embedded JDK" />
+         <option name="modules">
+           <set>
+             <option value="$PROJECT_DIR$" />
+             <option value="$PROJECT_DIR$/app" />
+           </set>
+         </option>
+-        <option name="resolveModulePerSourceSet" value="false" />
+       </GradleProjectSettings>
+     </option>
+   </component>
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"true\" project-jdk-name=\"Android Studio default JDK\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/.idea/misc.xml	(date 1677289710119)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Embedded JDK" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:dist=\"http://schemas.android.com/apk/distribution\"\r\n    package=\"com.sevian.andromeda\">\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <dist:module dist:instant=\"true\" />\r\n    <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\">\r\n    </uses-permission>\r\n    <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\">\r\n    </uses-permission>\r\n\r\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/AppTheme\">\r\n        <activity android:name=\".MainActivity\">\r\n\r\n        </activity>\r\n\r\n\r\n        <activity\r\n            android:name=\"android.app.NativeActivity\"\r\n            android:configChanges=\"orientation|keyboardHidden\"\r\n            android:label=\"@string/app_name\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n            <meta-data\r\n                android:name=\"android.app.lib_name\"\r\n                android:value=\"horse-engine\" />\r\n        </activity>\r\n\r\n\r\n    </application>\r\n\r\n\r\n\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/app/src/main/AndroidManifest.xml	(date 1666399076320)
+@@ -1,7 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:dist="http://schemas.android.com/apk/distribution"
+-    package="com.sevian.andromeda">
++    xmlns:dist="http://schemas.android.com/apk/distribution">
+     <uses-permission android:name="android.permission.INTERNET" />
+     <dist:module dist:instant="true" />
+     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE">
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\r\n\r\nandroid {\r\n    compileSdkVersion 29\r\n    buildToolsVersion '29.0.2'\r\n    defaultConfig {\r\n        applicationId \"com.sevian.andromeda\"\r\n        minSdkVersion 19\r\n        targetSdkVersion 28\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n        externalNativeBuild {\r\n            cmake {\r\n                cppFlags \"\"\r\n            }\r\n        }\r\n    }\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    externalNativeBuild {\r\n        cmake {\r\n            path \"src/main/cpp/CMakeLists.txt\"\r\n            version \"3.10.2\"\r\n        }\r\n    }\r\n    ndkVersion '21.4.7075529'\r\n}\r\n\r\ndependencies {\r\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\r\n    implementation 'androidx.appcompat:appcompat:1.1.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'\r\n    testImplementation 'junit:junit:4.12'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.1'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/app/build.gradle	(date 1666399076303)
+@@ -2,7 +2,6 @@
+ 
+ android {
+     compileSdkVersion 29
+-    buildToolsVersion '29.0.2'
+     defaultConfig {
+         applicationId "com.sevian.andromeda"
+         minSdkVersion 19
+@@ -29,6 +28,7 @@
+         }
+     }
+     ndkVersion '21.4.7075529'
++    namespace 'com.sevian.andromeda'
+ }
+ 
+ dependencies {
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Sun Jul 25 14:09:50 VET 2021\r\ndistributionBase=GRADLE_USER_HOME\r\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-7.0.2-bin.zip\r\ndistributionPath=wrapper/dists\r\nzipStorePath=wrapper/dists\r\nzipStoreBase=GRADLE_USER_HOME\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+--- a/gradle/wrapper/gradle-wrapper.properties	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/gradle/wrapper/gradle-wrapper.properties	(date 1666302587444)
+@@ -1,6 +1,6 @@
+ #Sun Jul 25 14:09:50 VET 2021
+ distributionBase=GRADLE_USER_HOME
+-distributionUrl=https\://services.gradle.org/distributions/gradle-7.0.2-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-7.4-bin.zip
+ distributionPath=wrapper/dists
+ zipStorePath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+Index: app/src/main/cpp/Race.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\r\n// Created by yanny on 6/1/2020.\r\n//\r\n\r\n#include <stdlib.h>     /* srand, rand */\r\n#include <time.h>       /* time */\r\n\r\n#include \"Race.h\"\r\n#include \"Button2D.h\"\r\n#include \"Text2D.h\"\r\n\r\nvoid Race::init() {\r\n/*\r\n    Cube3D * cube = new Cube3D();\r\n\r\n    cube->setPos(-0.05f, -0.5f, -0.5);\r\n\r\n    add(cube);\r\n*/\r\n    //return;\r\n\r\n    Text2D * mText = new Text2D();\r\n    mText->setColor({(GLfloat)246/255,(GLfloat)22/255,(GLfloat)195/255,1.0});\r\n    mText->setScale(0.01f);\r\n    mText->setText(\"Andromeda Nov: 2021\");\r\n    mText->setPos(-3.0f, 6.5f);\r\n\r\n\r\n\r\n    add(mText);\r\n\r\n\r\n\r\n    info = new InfoRace;\r\n    info->maxDistance = 5.0f;\r\n\r\n    track = new Sprite2D(\"png/pista.png\", 6.0f, 12.0f);\r\n    track->setPos(-3.0, -6.0, -0.1);\r\n\r\n    add(track);\r\n\r\n    Sprite2D * meta = new Sprite2D(\"png/meta.png\", 5.8f, 0.5f);\r\n    meta->setPos(-2.9, 5.0);\r\n\r\n    add(meta);\r\n\r\n    for(int i=0;i<maxHorses;i++){\r\n        Horse *h = new Horse(\"png/horse2.png\", 0.6f, 1.2f);\r\n        h->info = info;\r\n        h->setPos(-2.8+i*(0.87), -5.0);\r\n        addHorse(h);\r\n    }\r\n\r\n    Button2D *bStart = new Button2D(1.0, 0.6);\r\n    bStart->setColor({(float)245/255,(float)65/255,(float)218/255,1.0});\r\n    bStart->setPos(-2.5,-5.5);\r\n    bStart->setName(\"start\");\r\n    bStart->bind(this);\r\n    //b1->AttachEvent(\"click\", xx);\r\n\r\n    bStart->AttachEvent(\"click\", [](ElemEvent event) -> void {\r\n        Button2D *s = (Button2D*)event.target;\r\n        Race * x = (Race *)event.context;\r\n\r\n        //Race *r = (Race *)x->que;\r\n        x->startRace();\r\n       _LOGE(\"AInputEvent sButton Reset II: %f, %f, status %d\", event.x, event.y, x->state);\r\n    });\r\n\r\n    add(bStart);\r\n\r\n\r\n    Button2D *bPause = new Button2D(1.0, 0.6);\r\n    bPause->setColor({(float)185/255,(float)219/255,(float)13/255,1.0});\r\n    bPause->setPos(-1.5,-5.5);\r\n    bPause->setName(\"start\");\r\n    bPause->bind(this);\r\n    //b1->AttachEvent(\"click\", xx);\r\n\r\n    bPause->AttachEvent(\"click\", [](ElemEvent event) -> void {\r\n        Button2D *s = (Button2D*)event.target;\r\n        Race * x = (Race *)event.context;\r\n\r\n        //Race *r = (Race *)x->que;\r\n        x->stop();\r\n        //x->SS.playSound();\r\n        _LOGE(\"AInputEvent sButton Reset II: %f, %f, status %d\", event.x, event.y, x->state);\r\n    });\r\n\r\n    add(bPause);\r\n\r\n\r\n    Button2D *bReset = new Button2D(1.0, 0.6);\r\n    bReset->setColor({(float)185/255,(float)219/255,(float)13/255,1.0});\r\n    bReset->setPos(0.0,-5.5);\r\n    bReset->setName(\"start\");\r\n    bReset->bind(this);\r\n    //b1->AttachEvent(\"click\", xx);\r\n\r\n    bReset->AttachEvent(\"click\", [](ElemEvent event) -> void {\r\n        Button2D *s = (Button2D*)event.target;\r\n        Race * x = (Race *)event.context;\r\n\r\n        //Race *r = (Race *)x->que;\r\n        x->reset();\r\n        _LOGE(\"AInputEvent sButton Reset II: %f, %f, status %d\", event.x, event.y, x->state);\r\n    });\r\n\r\n    add(bReset);\r\n}\r\n\r\nvoid Race::play() {\r\n\r\n}\r\n\r\nvoid Race::stop() {\r\n    state = 0;\r\n}\r\n\r\nvoid Race::pause() {\r\n\r\n}\r\n\r\nvoid Race::terminate() {\r\n    setState(0);\r\n    for(int i=0;i<maxHorses;i++){\r\n        delete positions[i];\r\n    }\r\n    nPosition = 0;\r\n}\r\nvoid Race::setDistance() {\r\n\r\n}\r\n\r\nvoid Race::addHorse(Horse *horse) {\r\n    horses[nHorses] = horse;\r\n    nHorses++;\r\n    add(horse);\r\n}\r\n\r\nvoid Race::startRace() {\r\n    _LOGE(\"AInputEvent sButton start\");\r\n    //setState(1);\r\n    state = 1;\r\n\r\n}\r\n\r\nvoid Race::setCompetitor(int n) {\r\n    maxHorses = n;\r\n\r\n}\r\n\r\nvoid Race::render() {\r\n\r\n\r\n\r\n    Scene::render();\r\n}\r\n\r\nvoid Race::setState(int value) {\r\n    state = value;\r\n}\r\n\r\nRace *Race::get() {\r\n    return this;\r\n}\r\n\r\nvoid Race::render(glm::mat4 MVP) {\r\n    _LOGE(\"AInputEvent Position\");\r\n    if(state == 1){\r\n        srand (time(nullptr));\r\n        /* generate secret number between 1 and 10: */\r\n        double Fraction = 500.0;\r\n        GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;\r\n        GLfloat DX2 = ((double) rand() / (RAND_MAX)) / Fraction;\r\n        GLfloat DX3 = ((double) rand() / (RAND_MAX)) / Fraction;\r\n        u_short kk = 0;\r\n        for(int i=0;i<maxHorses;i++){\r\n\r\n\r\n            GLfloat DX = ((double) rand() / (RAND_MAX)) / Fraction;\r\n\r\n            horses[i]->setPosY( horses[i]->getPosY()+0.005+DX);\r\n            horses[i]->setPosX( horses[i]->getPosX());\r\n            kk = setPosition(horses[i]);\r\n            _LOGE(\"AInputEvent Position %d\",kk);\r\n\r\n        }\r\n\r\n        if(kk == maxHorses){\r\n            terminate();\r\n        }\r\n    }\r\n\r\n    Scene::render(MVP);\r\n}\r\n\r\nvoid Race::reset() {\r\n    for(int i=0;i<maxHorses;i++){\r\n        horses[i]->setPosY( -5.0);\r\n    }\r\n}\r\n\r\nu_short Race::setPosition(Horse *h) {\r\n\r\n    if(nPosition<maxHorses){\r\n        float pos =  h->getPosY();\r\n        if(pos>=info->maxDistance){\r\n            positions[nPosition] = h;\r\n            nPosition++;\r\n        }\r\n    }\r\n    return nPosition;\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/cpp/Race.cpp b/app/src/main/cpp/Race.cpp
+--- a/app/src/main/cpp/Race.cpp	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/app/src/main/cpp/Race.cpp	(date 1678321103290)
+@@ -22,7 +22,7 @@
+     Text2D * mText = new Text2D();
+     mText->setColor({(GLfloat)246/255,(GLfloat)22/255,(GLfloat)195/255,1.0});
+     mText->setScale(0.01f);
+-    mText->setText("Andromeda Nov: 2021");
++    mText->setText("Andromeda March: 2023");
+     mText->setPos(-3.0f, 6.5f);
+ 
+ 
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// Top-level build file where you can add configuration options common to all sub-projects/modules.\r\n\r\nbuildscript {\r\n    repositories {\r\n        google()\r\n        jcenter()\r\n        \r\n    }\r\n    dependencies {\r\n        classpath 'com.android.tools.build:gradle:7.0.3'\r\n        \r\n        // NOTE: Do not place your application dependencies here; they belong\r\n        // in the individual module build.gradle files\r\n    }\r\n}\r\n\r\nallprojects {\r\n    repositories {\r\n        google()\r\n        jcenter()\r\n        \r\n    }\r\n}\r\n\r\ntask clean(type: Delete) {\r\n    delete rootProject.buildDir\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle b/build.gradle
+--- a/build.gradle	(revision 7f266a117835e273b800b3bd9de57593e089619d)
++++ b/build.gradle	(date 1666399072136)
+@@ -7,7 +7,7 @@
+         
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:7.0.3'
++        classpath 'com.android.tools.build:gradle:7.3.1'
+         
+         // NOTE: Do not place your application dependencies here; they belong
+         // in the individual module build.gradle files
